@@ -78,3 +78,4 @@ create table produit(
     prix integer
 );
 
+-- ok
