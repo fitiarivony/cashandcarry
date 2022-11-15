@@ -59,6 +59,7 @@ create table ressource(
     idressource varchar(10) default 'RES'||nextval('ressource_seq') primary key,
     nomressource varchar(40) not null,
     idachattype varchar(10),
+    code varchar(30) not null,
     FOREIGN KEY (idachattype) REFERENCES achattype(idachattype)
 );
 insert into ressource(nomressource,idachattype) values 
@@ -72,6 +73,8 @@ create table besoin(
     quantite integer,
     iddept varchar(10),
     idressource varchar(10),
+     dateEnvoi timestamp not null,
+    dateLimite timestamp not null,
     FOREIGN KEY (idressource) REFERENCES ressource(idressource)
 );
 insert into besoin (quantite,iddept,idressource) values 
@@ -81,14 +84,13 @@ insert into besoin (quantite,iddept,idressource) values
 ;
 
 
-create table produit(
-    idproduit varchar(10) default 'PRO'||nextval('produit_seq') primary key,
-    idbesoin varchar(10),
-    qualite varchar(40) not null,
-    dateEnvoi timestamp not null,
-    dateLimite timestamp not null,
-    FOREIGN KEY (idbesoin) REFERENCES besoin(idbesoin)
-);
+-- create table produit(
+--     idproduit varchar(10) default 'PRO'||nextval('produit_seq') primary key,
+--     idbesoin varchar(10),
+    
+   
+--     FOREIGN KEY (idbesoin) REFERENCES besoin(idbesoin)
+-- );
 insert into produit(idbesoin,qualite,dateEnvoi,dateLimite) 
 values 
 ('BES1','Bonne','20/04/2022','31/12/2022'),
@@ -123,4 +125,7 @@ on besoin.idressource=ressource.idressource group by besoin.idressource;
 create view triage as
 select ressource.*,totalquantite from tri join ressource on ressource.idressource=tri.idressource;
 
-
+create view pourcentage  as
+select triage.*,idbesoin,iddept,quantite, (quantite::double precision/totalquantite::double precision)*100 pourcentage from triage 
+join besoin 
+on besoin.idressource=triage.idressource;
