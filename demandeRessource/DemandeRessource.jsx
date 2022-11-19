@@ -167,7 +167,13 @@ class DemandeRessource extends Component {
                     </thead>
                     <tbody>
                         {this.state.data.map( data =>
-                            <LigneRessource data={data} add={this.add} delete={this.delete} changeCR={this.changeCR} items={this.state.CRs} types={this.state.types} />
+                            <LigneRessource 
+                                data={data} 
+                                add={this.add} 
+                                delete={this.delete} 
+                                changeCR={this.changeCR} 
+                                items={this.state.CRs} 
+                                types={this.state.types} />
                         )}
                         
                         <tr>

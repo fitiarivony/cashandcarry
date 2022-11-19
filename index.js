@@ -9,6 +9,8 @@ import  {
 import List from './gen/List';
 import AjoutRessource from './ajoutRessource/AjoutRessource';
 import DemandeRessource from './demandeRessource/DemandeRessource';
+import ProTyper from './profromaTyping/ProTyper';
+import ProSender from './proformatenvoyer/ProSender';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -18,6 +20,8 @@ root.render(
     <Route path={'/list'} element={<List/>} ></Route>
     <Route path={'/ajoutRessource'} element={<AjoutRessource/>} ></Route>
     <Route path={'/demandeRessource'} element={<DemandeRessource/>} ></Route>
+    <Route path={'/proformatyper'} element={<ProTyper/>} ></Route>
+    <Route path={'/prosend'} element={<ProSender/>} ></Route>
     </Routes>
   </BrowserRouter>
 );

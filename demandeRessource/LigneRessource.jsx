@@ -3,7 +3,7 @@ import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import Modal from 'react-modal';
 import URLHelper from '../Helper/URLHelper';
 import '../assets/dist/css/bootstrap.min.css';
-// import './../assets/dist/css/bootstrap.min.css'
+// import './../assets/dist/css/bootstrap.min.csrc/profromaTyping/ProTyper.jsxss'
 
 
 class LigneRessource extends Component {
@@ -29,6 +29,7 @@ class LigneRessource extends Component {
           id: 4,
           name: 'Java'
         }
+        
       ]
     formatResult = (item) => {
         return (
@@ -60,6 +61,7 @@ class LigneRessource extends Component {
     }
     handleOnSelect = (item) => {
         // the item selected
+        console.log("ambany");
         console.log(item);
         document.getElementById("CR"+this.props.data.id).value=item.id;
 
@@ -101,7 +103,9 @@ class LigneRessource extends Component {
     closeModal=()=> {
         this.setState({modal:false});
     }
-    
+    // handleSearch=(item)=>{
+    //     if()
+    // }
     render() { 
 
         return (<tr>
@@ -111,13 +115,16 @@ class LigneRessource extends Component {
                 <div style={{ width: 200 }}>
                 <input type="hidden" name={"CR"+this.props.data.id} id={"CR"+this.props.data.id}/>
                 <ReactSearchAutocomplete
-                    name="test" 
                     items={this.props.items}
                     formatResult={this.formatResult}
                     onSelect={this.handleOnSelect}
+                    showIcon={false}
+                    showNoResultsText={<button onClick={this.openModal}>create new one</button>}
+                    showClear={false}
+                    
                     />
                     
-            <button onClick={this.openModal}>create new one</button>
+            
                 </div>
             </div>
             </td>
