@@ -8,9 +8,13 @@ create sequence achattype_seq;
 create sequence besoin_seq;
 create sequence produit_seq;
 create sequence ressource_seq;
+create sequence demanderessource_seq;
 create sequence fournisseur_seq;
+create sequence prenvoye_seq;
+create sequence proformatfournisseur_seq;
 
 create table departement(
+    id serial,
     iddept varchar(10) default 'DEP'||nextval('dept_seq') primary key,
     nomdepartement varchar(40) not null
 );
@@ -49,6 +53,7 @@ insert into societe(nomsociete,reference,adresse)values
 ('Nodie','34516788','Andoharanofotsy');
 
 create table achattype(
+    id serial,
     idachattype varchar(10) default 'ACH'||nextval('achattype_seq') primary key,
     nomachattype varchar(40) not null
 );
@@ -56,25 +61,26 @@ insert into achattype(nomachattype) values
 ('Achat'),('Interne');
 
 create table ressource(
+    id serial,
     idressource varchar(10) default 'RES'||nextval('ressource_seq') primary key,
-    nomressource varchar(40) not null,
+    intitule varchar(40) not null,
     idachattype varchar(10),
     code varchar(30) not null,
     FOREIGN KEY (idachattype) REFERENCES achattype(idachattype)
 );
-insert into ressource(nomressource,idachattype) values 
-('Kiraro','ACH1'),
-('Veste','ACH1'),
-('Fournitures','ACH2')
+insert into ressource(intitule,idachattype,code) values 
+('Kiraro','ACH1','HE2'),
+('Veste','ACH1','JH8'),
+('Fournitures','ACH2','KO9')
 ;
 
 create table besoin(
     idbesoin varchar(10) default 'BES'||nextval('besoin_seq') primary key,
-    quantite integer,
+    quantite float not null default 1,
     iddept varchar(10),
     idressource varchar(10),
-     dateEnvoi timestamp not null,
-    dateLimite timestamp not null,
+     dateEnvoi timestamp not null default current_timestamp,
+    dateLimite timestamp not null default current_timestamp,
     FOREIGN KEY (idressource) REFERENCES ressource(idressource)
 );
 insert into besoin (quantite,iddept,idressource) values 
@@ -84,38 +90,61 @@ insert into besoin (quantite,iddept,idressource) values
 ;
 
 
--- create table produit(
---     idproduit varchar(10) default 'PRO'||nextval('produit_seq') primary key,
---     idbesoin varchar(10),
-    
-   
---     FOREIGN KEY (idbesoin) REFERENCES besoin(idbesoin)
--- );
-insert into produit(idbesoin,qualite,dateEnvoi,dateLimite) 
-values 
-('BES1','Bonne','20/04/2022','31/12/2022'),
-('BES2','Bonne','20/04/2022','11/12/2022'),
-('BES2','Bonne','20/04/2022','31/12/2022'),
-('BES3','Mauvaise','20/04/2022','31/12/2022'),
-('BES3','Mauvaise','20/04/2022','31/12/2022'),
-('BES3','Mauvaise','20/04/2022','31/12/2022')
-;
-
 
 
 create table fournisseur(
     idfournisseur varchar(10) default 'FOU'||nextval('fournisseur_seq') primary key,
     nomfournisseur varchar(40) not null,
     adresse varchar(50) not null,
-    contact varchar(20) not null
+    contact varchar(20) not null,
+    codefournisseur varchar(40) not null
 );
 
-create table fournisseurressources(
+create table fournisseurressource(
     idressource varchar(10),
     idfournisseur varchar(10),
     FOREIGN KEY (idressource) REFERENCES ressource(idressource),
     FOREIGN KEY (idfournisseur) REFERENCES fournisseur(idfournisseur)
 );
+
+create table demande_ressource(
+    id serial,
+    iddemande_ressource varchar(10) default 'DER'||nextval('demanderessource_seq') primary key,
+    idressource varchar(10),
+    quantite float,
+    iddept varchar(10),
+    datedemande date,
+    dateLimite timestamp,
+    FOREIGN KEY (idressource) REFERENCES ressource(idressource),
+    FOREIGN KEY (iddept) REFERENCES departement(iddept) 
+);
+
+create table proformat_envoye(
+    id serial,
+    idprenvoye varchar(10) default 'PRE'||nextval('prenvoye_seq') primary key,
+    reference varchar(40) not null,
+    idressource varchar(10),
+    intitule varchar(50) not null,
+    quantite float,
+    idfournisseur varchar(10),
+    FOREIGN KEY (idressource) REFERENCES ressource(idressource),
+    FOREIGN KEY (idfournisseur) REFERENCES fournisseur(idfournisseur)
+);
+
+create table proformat_fournisseur(
+    id serial,
+    idproformat_fournisseur varchar(10) default 'PRO'||nextval('proformatfournisseur_seq') primary key,
+    idfournisseur varchar(10),
+    idreferencedemande varchar(10),
+    qualite varchar(40) not null,
+    quantite float not null,
+    delailivraison timestamp not null,
+    lieulivraison varchar(40) not null,
+    PU integer,
+    daty date,
+    FOREIGN KEY (idfournisseur) REFERENCES fournisseur (idfournisseur)
+);
+
 
 create view tri as
 select besoin.idressource,sum(quantite) totalquantite from besoin 
