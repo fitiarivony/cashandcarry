@@ -9,9 +9,12 @@ class Ressource extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'idressource',
-        'nomressource',
-        'idachattype',
-    ];
+    protected $table = 'ressource';
+    public $timestamps = false;
+    public $incrementing = false;
+    // protected $fillable = [
+    //     'idressource',
+    //     'nomressource',
+    //     'idachattype',
+    // ];
 }

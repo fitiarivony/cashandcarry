@@ -9,10 +9,13 @@ class Admindept extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'idadmin',
-        'identifiant',
-        'mdp',
-        'iddept',
-    ];
+    protected $table = 'admindept';
+    public $timestamps = false;
+    public $incrementing = false;
+    // protected $fillable = [
+    //     'idadmin',
+    //     'identifiant',
+    //     'mdp',
+    //     'iddept',
+    // ];
 }

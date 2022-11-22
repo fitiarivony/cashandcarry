@@ -9,8 +9,11 @@ class Fournisseurressources extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'idressource',
-        'idfournisseur',
-    ];
+    protected $table = 'fournisseurressources';
+    public $timestamps = false;
+    public $incrementing = false;
+    // protected $fillable = [
+    //     'idressource',
+    //     'idfournisseur',
+    // ];
 }

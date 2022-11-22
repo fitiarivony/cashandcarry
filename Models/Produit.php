@@ -9,13 +9,16 @@ class Produit extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'idproduit',
-        'idbesoin',
-        'idressource',
-        'qualite',
-        'delailivraison',
-        'lieulivraison',
-        'prix',
-    ];
+    protected $table = 'produit';
+    public $timestamps = false;
+    public $incrementing = false;
+    // protected $fillable = [
+    //     'idproduit',
+    //     'idbesoin',
+    //     'idressource',
+    //     'qualite',
+    //     'delailivraison',
+    //     'lieulivraison',
+    //     'prix',
+    // ];
 }

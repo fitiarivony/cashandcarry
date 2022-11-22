@@ -9,10 +9,13 @@ class Societe extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'idsociete',
-        'nomsociete',
-        'reference',
-        'adresse',
-    ];
+    protected $table = 'societe';
+    public $timestamps = false;
+    public $incrementing = false;
+    // protected $fillable = [
+    //     'idsociete',
+    //     'nomsociete',
+    //     'reference',
+    //     'adresse',
+    // ];
 }

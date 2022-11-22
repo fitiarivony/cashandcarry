@@ -9,8 +9,11 @@ class Achattype extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'idachattype',
-        'nomachattype',
-    ];
+    protected $table = 'achattype';
+    public $timestamps = false;
+    public $incrementing = false;
+    // protected $fillable = [
+    //     'idachattype',
+    //     'nomachattype',
+    // ];
 }

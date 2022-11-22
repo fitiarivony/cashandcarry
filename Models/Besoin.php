@@ -9,10 +9,13 @@ class Besoin extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'idbesoin',
-        'quantite',
-        'iddept',
-        'idressource',
-    ];
+    protected $table = 'besoin';
+    public $timestamps = false;
+    public $incrementing = false;
+    // protected $fillable = [
+    //     'idbesoin',
+    //     'quantite',
+    //     'iddept',
+    //     'idressource',
+    // ];
 }
