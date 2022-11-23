@@ -1,3 +1,5 @@
+\c postgres;
+drop database cashcarry;
 create database cashcarry;
 alter database cashcarry owner to societe;
 
