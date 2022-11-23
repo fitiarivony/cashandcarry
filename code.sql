@@ -145,6 +145,14 @@ create table proformat_fournisseur(
     FOREIGN KEY (idfournisseur) REFERENCES fournisseur (idfournisseur)
 );
 
+create table superuser(
+    identifiant varchar(40) not null,
+    mdp varchar(40) not null
+);
+insert into superuser(identifiant,mdp) values 
+('Root1','root1')
+;
+
 
 create view tri as
 select besoin.idressource,sum(quantite) totalquantite from besoin 
