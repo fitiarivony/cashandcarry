@@ -66,8 +66,14 @@ class General extends Controller
         $parameters=$request->query->all();
         $class="App\Models\\".$nomtable;
         $instance=new $class();
-       $tableau=$instance::where("identifiant","=",$parameters['identifiant'],"and","mdp",$parameters['mdp'])->get();
-        echo($tableau);
+        $admins=null;
+        foreach ($parameters as $key => $value) {
+            if($admins==null)$admins=$instance::where($key,$value);
+            else $admins=$admins->where($key,$value);
+        }
+        $admins=$admins->count();
+       if($admins==0)return "you're not admin";
+        else return  "welcome admin!!";
     }
 
     /**
