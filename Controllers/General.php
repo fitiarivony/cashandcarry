@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Termwind\Components\Dd;
 
 class General extends Controller
@@ -43,13 +42,35 @@ class General extends Controller
         $class="App\Models\\".$nomtable;
         $instance=new $class();
         $content=$request->getContent();
-        $table=json_decode($content, true);
-        // dd($table);
-       foreach ($table as $key => $value) {
+        $table=json_decode($content);
+        if (is_array($table)) {
+            $liste=json_decode($content, true);
+            $this->insertArray($liste,$instance);
+        }else{
+
+            $object=json_decode($content, true);
+            $this->insertObject($object,$instance);
+        }
+        return json_encode([
+            "etat"=>true,
+            "last"=> $instance::get()->last()
+        ]);
+    }
+    public function insertArray($table,$instance){
+        for ($i=0; $i < count($table); $i++) {
+
+            $this->insertObject($table[$i],$instance);
+        }
+    }
+    public function insertObject($object,$instance){
+
+        foreach ($object as $key => $value) {
+
             $instance->$key=$value;
        }
-   //    dd($instance);
-      $instance->save();
+        // $instance;
+         $instance::create($object);
+
     }
 
     /**
@@ -72,8 +93,8 @@ class General extends Controller
             if($admins==null)$admins=$instance::where($key,$value);
             else $admins=$admins->where($key,$value);
         }
-        $cnt=$admins->count();
-        
+         $cnt=$admins->count();
+
         if($cnt==0)
             return json_encode(array("etat"=>false));
         else
