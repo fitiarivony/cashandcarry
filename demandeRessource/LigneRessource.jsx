@@ -10,32 +10,23 @@ class LigneRessource extends Component {
     state = this.props; 
     items = [
         {
-          id: 0,
-          name: 'Cobol'
-        },
-        {
-          id: 1,
-          name: 'JavaScript'
-        },
-        {
-          id: 2,
-          name: 'Basic'
-        },
-        {
-          id: 3,
-          name: 'PHP'
-        },
-        {
-          id: 4,
-          name: 'Java'
-        }
-        
+            id: 0,
+            intitule: '',
+            idressource: '',
+            code:'',
+            idachatype: '',
+          }
       ]
+      type={
+        idachatype:"",
+        nomachattype:'',
+      }
+   
     formatResult = (item) => {
         return (
           <>
-            <span style={{ display: 'block', textAlign: 'left' }}>id: {item.id}</span>
-            <span style={{ display: 'block', textAlign: 'left' }}>name: {item.name}</span>
+            <span style={{ display: 'block', textAlign: 'left' }}>Code: {item.code}</span>
+            <span style={{ display: 'block', textAlign: 'left' }}>intitule: {item.intitule}</span>
           </>
         )
       }
@@ -46,97 +37,80 @@ class LigneRessource extends Component {
     }
     changeCR=(event)=>{
         let data=this.state.data;
-        data.CR=event.target.value;
+        data.idressource=event.target.value;
         this.props.changeCR(data);
+        
     }
     changeQ=(event)=>{
         let data=this.state.data;
-        data.Q=event.target.value;
+        data.quantite=event.target.value;
         this.props.changeCR(data);
     }
     changeDL=(event)=>{
         let data=this.state.data;
-        data.DL=event.target.value;
+        data.datelimite=event.target.value;
+        this.props.changeCR(data);
+    }
+    changeDE=(event)=>{
+        let data=this.state.data;
+        data.dateenvoi=event.target.value;
         this.props.changeCR(data);
     }
     handleOnSelect = (item) => {
         // the item selected
-        
         let data=this.state.data;
         console.log("ambany");
-        console.log(item);
-        document.getElementById("CR"+this.props.data.id).value=item.id;
-        data.CR=item.id;
+         document.getElementById("CR"+this.props.data.id).value=item.idressource;
+         data.idressource=item.idressource;
         this.props.changeCR(data);
+        // console.log( document.getElementById("CR"+this.props.data.id));
+       
 
-    }
+      }
+    
+    
+
+
     handleCreate=(event) => {
         console.log("creating");
         event.preventDefault();
         this.create();
     }
     create= () =>{
-        let data=this.state.data;
         var form = document.getElementById("Form2");
         var formData = new FormData(form);
         var object = {};
         formData.forEach((value, key) => object[key] = value);
-        console.log(object);
-        this.getId(URLHelper.urlgen("Ressource"), object);
-        document.getElementById("CR"+this.props.data.id).value=object.code;
-        data.CR=object.code;
-        this.props.changeCR(data);
+        var json = JSON.stringify(object);
+        console.log(formData);
+        console.log( json);
+         this.getId(json);
     }
-    getId=(url, postobj)=>{
-        const options = {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(postobj)
-              };
-        fetch(url, options)
-            .then(response => response.json())
-            .then(response => console.log(response))
-            .catch(err => console.error(err));
+    getId=(data)=>{
+        fetch(URLHelper.urlgen("api/Ressource"),{crossDomain:true,method:'POST',headers:{'Content-Type': 'application/json'},body: data })
+        .then(res=>{return res.json() ; })
+        .then(valiny=>{ 
+            // console.log(data);
+            if (valiny.etat) {
+                console.log("reussite");
+                this.props.reload();
+                let data=this.state.data;
+                data.idressource=valiny.last.idressource;
+                this.props.changeCR(data);
+                 this.closeModal();
+                 
+            }else{
+                alert("erreur");
+                console.log("echec");
+            }
+         })
     }
-    // const options = {
-    //     method: 'POST',
-    //     headers: {'Content-Type': 'application/json'},
-    //     body: '{"idressource":"tokony","intitule":"kiraro","idachattype":"ACH1","code":"4040"}'
-    //   };
-      
-    //   fetch('http://127.0.0.1:8000/api/Ressource', options)
-    //     .then(response => response.json())
-    //     .then(response => console.log(response))
-    //     .catch(err => console.error(err));
     openModal=()=> {
         this.setState({modal:true});
-        this.initialize();
     }
+
     closeModal=()=> {
         this.setState({modal:false});
-    }
-    initialize =()=> {
-        this.askService(URLHelper.urlgen("Achattype"));
-    }
-    askService = (url) => {
-        fetch(url,{crossDomain:true,method:'GET', headers: {}})
-        .then(res => { return res.json();})
-        .then(data=>{
-            console.log(data);
-            let res=[];
-            data.forEach(inf=>{
-                res.push({
-                    id:inf.idachattype,
-                    name:inf.nomachattype
-                });
-            })
-            console.log(res);
-            this.setState(
-                {
-                    types: res
-                }
-            )
-         })
     }
     // handleSearch=(item)=>{
     //     if()
@@ -151,12 +125,13 @@ class LigneRessource extends Component {
                 <input type="hidden" name={"CR"+this.props.data.id} id={"CR"+this.props.data.id}/>
                 <ReactSearchAutocomplete
                     items={this.props.items}
+                    fuseOptions={{ keys: ["intitule", "code"] }} 
                     formatResult={this.formatResult}
                     onSelect={this.handleOnSelect}
                     showIcon={false}
                     showNoResultsText={<button onClick={this.openModal}>create new one</button>}
                     showClear={false}
-                    
+                    resultStringKeyName="intitule"
                     />
                     
             
@@ -164,10 +139,13 @@ class LigneRessource extends Component {
             </div>
             </td>
             <td>
-                <input type="number" name={"Q"+this.props.data.id} onChange={this.changeQ} id="" value={this.props.data.Q} onKeyPress={this.onlyNumber}  />
+                <input type="number" name={"Q"+this.props.data.id} onChange={this.changeQ} id="" value={this.props.data.quantite} onKeyPress={this.onlyNumber}  />
             </td>
             <td>
-                <input type="date" name={"DL"+this.props.data.id} id="" onChange={this.changeDL} value={this.props.data.DL} />
+                <input type="date" name={"DL"+this.props.data.id} id="" onChange={this.changeDL} value={this.props.data.datelimite} />
+            </td>
+            <td>
+                <input type="date" name={"DE"+this.props.data.id} id="" onChange={this.changeDE} value={this.props.data.dateenvoi} />
             </td>
             <td>
                 <button onClick={this.props.add} className="btn btn-success" >More</button>
@@ -185,10 +163,10 @@ class LigneRessource extends Component {
                         </div>
                         <div className="mb-3">
                             <label for="" className="form-label">Type</label>
-                            <select className="form-select form-select-lg" name="idachattype" id="">
+                            <select value={this.type}  className="form-select form-select-lg" name="idachattype" id="">
                                 {this.state.types.map(data => 
-                                    <option value={data.id}>{data.name}</option>
-                                    )}
+                                    <option value={data.idachattype}>{data.idachattype}</option>
+                                )}
                             </select>
                             
                         </div>

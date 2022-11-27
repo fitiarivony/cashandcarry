@@ -14,41 +14,26 @@ class DemandeRessource extends Component {
         data:[
             {
                 id:1,
-                CR:"",
-                Q:0,
-                DL:""
+                idressource:"",
+                quantite:0,
+                datelimite:"",
+                dateenvoi:"",
+                iddept:"DEP1",
             }
         ],
         CRs : [
             {
               id: 0,
-              name: 'Cobol'
-            },
-            {
-              id: 1,
-              name: 'JavaScript'
-            },
-            {
-              id: 2,
-              name: 'Basic'
-            },
-            {
-              id: 3,
-              name: 'PHP'
-            },
-            {
-              id: 4,
-              name: 'Java'
+              intitule: '',
+              idressource: '',
+              code:'',
+              idachatype: '',
             }
           ],
           types:[
             {
                 id: 1,
                 nom:"type 1"
-            },
-            {
-                id: 2,
-                nom:"type 2"
             }
           ]
         
@@ -66,12 +51,14 @@ class DemandeRessource extends Component {
         let newData=[...data];
         newData.push({
             id:this.state.data[this.state.data.length-1].id+1,
-            CR:"",
-            Q:0,
-            DL:""
+            idressource:"",
+            quantite:0,
+            datelimite:"",
+            dateenvoi:"",
+            iddept:"DEP1",
         });
         this.setState({data:newData});
-        console.log(this.state);
+        // console.log(this.state);
     }
     delete=(id)=>{
         console.log("nihena");
@@ -105,22 +92,16 @@ class DemandeRessource extends Component {
         this.callchamp();
     }
     callchamp= () =>{
-        var form = document.getElementById("myForm");
-        var formData = new FormData(form);
-        var object = {};
-        formData.forEach((value, key) => object[key] = value);
-        var json = JSON.stringify(object);
-        console.log(formData);
-        console.log( json);
-        this.askRessources(URLHelper.urlgen("logAdmin/login.php?data="+json));
+        this.askRessources(URLHelper.urlgen("api/Besoin"));
     }
+   
     askRessources=(url)=>{
-        fetch(url,{crossDomain:true,method:'GET',headers:{}})
+        fetch(url,{crossDomain:true,method:'POST',headers:{ 'Content-Type': 'application/json'},body: JSON.stringify(this.state.data)})
         .then(res=>{return res.json() ; })
         .then(data=>{ 
             console.log(data);
             if (data.etat) {
-                window.location.replace("/option")  
+                // window.location.replace("/option")  
             }else{
                 alert("erreur");
                 console.log("echec");
@@ -130,27 +111,34 @@ class DemandeRessource extends Component {
     
     constructor () {
         super();
-        this.initialize();
+         this.initialize();
     }
 
     initialize =()=> {
-        this.askService(URLHelper.urlgen("Ressource"));
+        // this.askService(URLHelper.urlgen("testFA.php"));
+        this.listeressource();
+        this.listetype();
     }
-    askService = (url) => {
-        fetch(url,{crossDomain:true,method:'GET', headers: {}})
+
+    listeressource = () => {
+        fetch(URLHelper.urlgen("api/Ressource"),{crossDomain:true,method:'GET', headers: {}})
         .then(res => { return res.json();})
         .then(data=>{
-            console.log(data);
-            let res=[];
-            data.forEach(inf=>{
-                res.push({
-                    id:inf.code,
-                    name:inf.intitule
-                });
-            })
             this.setState(
                 {
-                    CRs: res
+                     CRs: data, 
+                }
+            )
+         })
+    }
+    listetype = () => {
+        
+        fetch(URLHelper.urlgen("api/Achattype"),{crossDomain:true,method:'GET', headers: {}})
+        .then(res => { return res.json();})
+        .then(data=>{
+            this.setState(
+                {
+                    types: data
                 }
             )
          })
@@ -178,7 +166,8 @@ class DemandeRessource extends Component {
                                 add={this.add} 
                                 delete={this.delete} 
                                 changeCR={this.changeCR} 
-                                items={this.state.CRs} 
+                                items={this.state.CRs}
+                                reload={this.listeressource}
                                 types={this.state.types} />
                         )}
                         
