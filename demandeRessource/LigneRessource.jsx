@@ -61,47 +61,82 @@ class LigneRessource extends Component {
     }
     handleOnSelect = (item) => {
         // the item selected
+        
+        let data=this.state.data;
         console.log("ambany");
         console.log(item);
         document.getElementById("CR"+this.props.data.id).value=item.id;
+        data.CR=item.id;
+        this.props.changeCR(data);
 
-
-      }
+    }
     handleCreate=(event) => {
         console.log("creating");
         event.preventDefault();
         this.create();
     }
     create= () =>{
+        let data=this.state.data;
         var form = document.getElementById("Form2");
         var formData = new FormData(form);
         var object = {};
         formData.forEach((value, key) => object[key] = value);
-        var json = JSON.stringify(object);
-        console.log(formData);
-        console.log( json);
-        this.getId(URLHelper.urlgen("logAdmin/login.php?data="+json));
+        console.log(object);
+        this.getId(URLHelper.urlgen("Ressource"), object);
+        document.getElementById("CR"+this.props.data.id).value=object.code;
+        data.CR=object.code;
+        this.props.changeCR(data);
     }
-    getId=(url)=>{
-        fetch(url,{crossDomain:true,method:'GET',headers:{}})
-        .then(res=>{return res.json() ; })
-        .then(data=>{ 
-            console.log(data);
-            if (data.etat) {
-                //document.getElementById("CR"+this.props.data.id).value=data.id
-                console.log("reussite");
-                this.closeModal();
-            }else{
-                alert("erreur");
-                console.log("echec");
-            }
-         })
+    getId=(url, postobj)=>{
+        const options = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(postobj)
+              };
+        fetch(url, options)
+            .then(response => response.json())
+            .then(response => console.log(response))
+            .catch(err => console.error(err));
     }
+    // const options = {
+    //     method: 'POST',
+    //     headers: {'Content-Type': 'application/json'},
+    //     body: '{"idressource":"tokony","intitule":"kiraro","idachattype":"ACH1","code":"4040"}'
+    //   };
+      
+    //   fetch('http://127.0.0.1:8000/api/Ressource', options)
+    //     .then(response => response.json())
+    //     .then(response => console.log(response))
+    //     .catch(err => console.error(err));
     openModal=()=> {
         this.setState({modal:true});
+        this.initialize();
     }
     closeModal=()=> {
         this.setState({modal:false});
+    }
+    initialize =()=> {
+        this.askService(URLHelper.urlgen("Achattype"));
+    }
+    askService = (url) => {
+        fetch(url,{crossDomain:true,method:'GET', headers: {}})
+        .then(res => { return res.json();})
+        .then(data=>{
+            console.log(data);
+            let res=[];
+            data.forEach(inf=>{
+                res.push({
+                    id:inf.idachattype,
+                    name:inf.nomachattype
+                });
+            })
+            console.log(res);
+            this.setState(
+                {
+                    types: res
+                }
+            )
+         })
     }
     // handleSearch=(item)=>{
     //     if()
@@ -142,17 +177,17 @@ class LigneRessource extends Component {
                     <form action="" id="Form2" >
                         <div className="mb-3">
                             <label for="" className="form-label">code ressource</label>
-                            <input type="text" className="form-control" name="nCR" id="" aria-describedby="helpId" placeholder=""/>
+                            <input type="text" className="form-control" name="code" id="" aria-describedby="helpId" placeholder=""/>
                         </div>
                         <div className="mb-3">
                             <label for="" className="form-label">intitule</label>
-                            <input type="text" className="form-control" name="nIntit" id="" aria-describedby="helpId" placeholder=""/>
+                            <input type="text" className="form-control" name="intitule" id="" aria-describedby="helpId" placeholder=""/>
                         </div>
                         <div className="mb-3">
                             <label for="" className="form-label">Type</label>
-                            <select className="form-select form-select-lg" name="type" id="">
+                            <select className="form-select form-select-lg" name="idachattype" id="">
                                 {this.state.types.map(data => 
-                                    <option value={data.id}>{data.nom}</option>
+                                    <option value={data.id}>{data.name}</option>
                                     )}
                             </select>
                             

@@ -134,17 +134,23 @@ class DemandeRessource extends Component {
     }
 
     initialize =()=> {
-        this.askService(URLHelper.urlgen("testFA.php"));
+        this.askService(URLHelper.urlgen("Ressource"));
     }
     askService = (url) => {
         fetch(url,{crossDomain:true,method:'GET', headers: {}})
         .then(res => { return res.json();})
         .then(data=>{
             console.log(data);
+            let res=[];
+            data.forEach(inf=>{
+                res.push({
+                    id:inf.code,
+                    name:inf.intitule
+                });
+            })
             this.setState(
                 {
-                    CRs: data.CRs,
-                    types: data.types
+                    CRs: res
                 }
             )
          })
