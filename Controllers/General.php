@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Termwind\Components\Dd;
 
 class General extends Controller
@@ -71,9 +72,12 @@ class General extends Controller
             if($admins==null)$admins=$instance::where($key,$value);
             else $admins=$admins->where($key,$value);
         }
-        $admins=$admins->count();
-       if($admins==0)return "you're not admin";
-        else return  "welcome admin!!";
+        $cnt=$admins->count();
+        
+        if($cnt==0)
+            return json_encode(array("etat"=>false));
+        else
+        	return json_encode(array("etat"=>true, "data"=>$admins->get()));
     }
 
     /**
