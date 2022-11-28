@@ -1,5 +1,3 @@
-\c postgres;
-drop database cashcarry;
 create database cashcarry;
 alter database cashcarry owner to societe;
 
@@ -7,7 +5,7 @@ create sequence admindept_seq;
 create sequence dept_seq;
 create sequence societe_seq;
 create sequence achattype_seq;
-create sequence besoin_seq;
+-- create sequence besoin_seq;
 create sequence produit_seq;
 create sequence ressource_seq;
 create sequence demanderessource_seq;
@@ -76,20 +74,21 @@ insert into ressource(intitule,idachattype,code) values
 ('Fournitures','ACH2','KO9')
 ;
 
-create table besoin(
-    idbesoin varchar(10) default 'BES'||nextval('besoin_seq') primary key,
-    quantite float not null default 1,
-    iddept varchar(10),
-    idressource varchar(10),
-     dateEnvoi timestamp not null default current_timestamp,
-    dateLimite timestamp not null default current_timestamp,
-    FOREIGN KEY (idressource) REFERENCES ressource(idressource)
-);
-insert into besoin (quantite,iddept,idressource) values 
-(1,'DEP1','RES1'),
-(2,'DEP2','RES2'),
-(2,'DEP4','RES2')
-;
+-- create table besoin(
+--     id serial,
+--     idbesoin varchar(10) default 'BES'||nextval('besoin_seq') primary key,
+--     quantite float not null default 1,
+--     iddept varchar(10),
+--     idressource varchar(10),
+--      dateEnvoi timestamp not null default current_timestamp,
+--     dateLimite timestamp not null default current_timestamp,
+--     FOREIGN KEY (idressource) REFERENCES ressource(idressource)
+-- );
+-- insert into besoin (quantite,iddept,idressource) values 
+-- (1,'DEP1','RES1'),
+-- (2,'DEP2','RES2'),
+-- (2,'DEP4','RES2')
+-- ;
 
 
 
@@ -102,12 +101,27 @@ create table fournisseur(
     codefournisseur varchar(40) not null
 );
 
+insert into fournisseur (nomfournisseur,adresse,contact,codefournisseur) values
+('Anto Textile','IVT 44 Antanimena','0343044023','RK5'),
+('Aigle d or','IVK 22 Analakely','0323523945','GH6'),
+('Sodim','IVR 40 Andraharo','0323429040','TH7'),
+('Jina','IVH 50 Antanimena','0332343299','RT4'),
+('Zara','IVB 67 Andohalo','0345234523','HU5')
+;
+
 create table fournisseurressource(
     idressource varchar(10),
     idfournisseur varchar(10),
     FOREIGN KEY (idressource) REFERENCES ressource(idressource),
     FOREIGN KEY (idfournisseur) REFERENCES fournisseur(idfournisseur)
 );
+insert into fournisseurressource values
+('RES1','FOU2'),
+('RES2','FOU1'),
+('RES3','FOU3'),
+('RES1','FOU4'),
+('RES1','FOU5')
+;
 
 create table demande_ressource(
     id serial,
@@ -157,14 +171,21 @@ insert into superuser(identifiant,mdp) values
 
 
 create view tri as
-select besoin.idressource,sum(quantite) totalquantite from besoin 
+select demande_ressource.idressource,sum(quantite) totalquantite from demande_ressource 
 join ressource 
-on besoin.idressource=ressource.idressource group by besoin.idressource;
+on demande_ressource.idressource=ressource.idressource group by demande_ressource.idressource;
 
 create view triage as
 select ressource.*,totalquantite from tri join ressource on ressource.idressource=tri.idressource;
 
 create view pourcentage  as
-select triage.*,idbesoin,iddept,quantite, (quantite::double precision/totalquantite::double precision)*100 pourcentage from triage 
-join besoin 
-on besoin.idressource=triage.idressource;
+select triage.*,iddemande_ressource,iddept,quantite, (quantite::double precision/totalquantite::double precision)*100 pourcentage from triage 
+join demande_ressource 
+on demande_ressource.idressource=triage.idressource;
+
+create view fourniss_ress_info as 
+select fournisseur.*,idressource
+from fournisseurressource
+join fournisseur
+on fournisseur.idfournisseur=fournisseurressource.idfournisseur
+;
