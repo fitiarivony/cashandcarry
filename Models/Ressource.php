@@ -7,14 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ressource extends Model
 {
-    use HasFactory;
-
-    protected $table = 'ressource';
-    public $timestamps = false;
-    public $incrementing = false;
-    // protected $fillable = [
-    //     'idressource',
-    //     'nomressource',
-    //     'idachattype',
-    // ];
+  //  use HasFactory;
+  public $timestamps = false;
+  protected $table='ressource';
+  protected $fillable = ['intitule','idachattype','code'];
+  
 }

@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Admindept extends Model
+class Ressource_detail extends Model
 {
     // use HasFactory;
+    protected $table = 'fourniss_ress_info';
     public $timestamps = false;
-  protected $table='admindept';
-  protected $fillable = ['identifiant','mdp','iddept'];
+    public $incrementing = false;
 }

@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Proformat_envoye extends Model
 {
-    use HasFactory;
-    protected $table = 'proformat_envoye';
-    public $timestamps = false;
-    public $incrementing = false;
+  //  use HasFactory;
+  public $timestamps = false;
+  protected $table='proformat_envoye';
+  protected $fillable = ['reference','idressource','intitule','quantite','idfournisseur'];
 }

@@ -10,5 +10,5 @@ class Demande_ressource extends Model
     use HasFactory;
     protected $table = 'demande_ressource';
     public $timestamps = false;
-    public $incrementing = false;
+    protected $fillable = ['quantite','iddept','idressource','dateenvoi','datelimite'];
 }

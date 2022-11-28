@@ -7,13 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Achattype extends Model
 {
-    use HasFactory;
-
-    protected $table = 'achattype';
-    public $timestamps = false;
-    public $incrementing = false;
-    // protected $fillable = [
-    //     'idachattype',
-    //     'nomachattype',
-    // ];
+    // use HasFactory;
+    protected $table='achattype';
+    protected $fillable = ['nomachattype'];
 }

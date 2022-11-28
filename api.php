@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Demande_ressource;
 use App\Http\Controllers\General;
 use App\Http\Controllers\Proformat_envoye;
 use App\Http\Controllers\ProformatRecu;
@@ -34,3 +35,5 @@ Route::get('/ressource',[Ressource::class,"index"]);
 Route::get('/{nomtable}',[General::class,"index"]);
 Route::post('/{nomtable}',[General::class,"store"]);
 Route::get('/{nomtable}/login',[General::class,"login"]);
+
+Route::get('/Demande_ressource/details',[Demande_ressource::class,"detailsDemande"]);

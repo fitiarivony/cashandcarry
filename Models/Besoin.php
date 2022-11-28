@@ -7,15 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Besoin extends Model
 {
-    use HasFactory;
-
-    protected $table = 'besoin';
     public $timestamps = false;
-    public $incrementing = false;
-    // protected $fillable = [
-    //     'idbesoin',
-    //     'quantite',
-    //     'iddept',
-    //     'idressource',
-    // ];
+    protected $table='besoin';
+    protected $fillable = ['quantite','iddept','idressource','dateenvoi','datelimite'];
 }
