@@ -85,7 +85,8 @@ class General extends Controller
 
     }
     public function login(Request $request,$nomtable){
-        $parameters=$request->query->all();
+        $parameters=$request->query->all()["data"];
+        $parameters=json_decode($parameters);
         $class="App\Models\\".$nomtable;
         $instance=new $class();
         $admins=null;
