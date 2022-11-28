@@ -9,27 +9,32 @@ class ProTyper extends Component {
     state = { 
         listFournisseur:[
             {
-                id:"FRN1",
-                name:"Total"
-            },
-            {
-                id:"FRN2",
-                name:"Galana"
-            },
-            {
-                id:"FRN3",
-                name:"Jovenna"
+                idfournisseur:"",
+                nomfournisseur:"",
+                adresse:"",
+                contact:"",
+                codefournisseur:"",
             }
         ]
      }
      constructor () {
         super();
-        this.initialize();
+       this.initialize();
     }
 
     initialize =()=> {
-        let data=FetchHelper.getData(URLHelper.urlgen("testFA.php"));
-        this.setState({listFournisseur:data});
+     
+        this.getData();
+        // this.setState({listFournisseur:data});
+    }
+    getData=()=>{
+        
+        fetch(URLHelper.urlgen("api/Fournisseurs"),{crossDomain:true,method:'GET',headers:{}})
+        .then(res=>{return res.json() ; })
+        .then(data=>{ 
+          this.setState({listFournisseur:data});
+         })
+        
     }
     onlyNumber=(event) => {
         if (!/[0-9]/.test(event.key)) {
@@ -63,13 +68,17 @@ class ProTyper extends Component {
             }
          })
     }
-    handleOnSelect = (item) => {
-        // the item selected
-        console.log("ambany");
-        console.log(item);
-        document.getElementById("cf").value=item.id;
-
-
+   
+      formatResult = (item) => {
+        return (
+          <>
+          <span style={{ display: 'block', textAlign: 'left' }}>{item.nomfournisseur}</span>
+            <span style={{ display: 'block', textAlign: 'left' }}>Code: {item.codefournisseur}</span>
+          </>
+        )
+      }
+      handleOnSelect = (item) => {
+         document.getElementById("idfournisseur").value=item.idfournisseur;
       }
     render() { 
         return (
@@ -80,45 +89,50 @@ class ProTyper extends Component {
                         <tr>
                             <td>Code Fournisseur</td>
                             <td>
-                                <input type="hidden" name="cf" />
+                                <input type="hidden" name="idfournisseur"  id="idfournisseur" />
                                 <ReactSearchAutocomplete 
-                                items={this.state.listFournisseur}/>
+                                items={this.state.listFournisseur}
+                                onSelect={this.handleOnSelect}
+                                fuseOptions={{ keys: ["nomfournisseur", "codefournisseur"] }} 
+                                resultStringKeyName="codefournisseur"
+                                formatResult={this.formatResult}
+                                />
                             </td>
                         </tr>
                         <tr>
                             <td>Reference demande</td>
                             <td>
-                                <input type="text" name="rd" />
+                                <input type="text" name="idreferencedemande" />
                                 {/* <ReactSearchAutocomplete/> */}
                             </td>
                         </tr>
                         <tr>
                             <td>Qualite</td>
                             <td>
-                                <input type="text" name="Qlity" />
+                                <input type="text" name="qualite" />
                             </td>
                         </tr>
                         <tr>
                             <td>Quantite</td>
                             <td>
-                                <input type="number" name="Qtity" min={0} onKeyPress={this.onlyNumber}/>
+                                <input type="number" name="quantite" min={0} onKeyPress={this.onlyNumber}/>
                             </td>
                         </tr>
                         <tr>
                             <td>Delai de livraison</td>
                             <td>
-                                <input type="datetime-local" name="date" id="" />
+                                <input type="datetime-local" name="delailivraison" id="" />
                             </td>
                         </tr>
                         <tr>
                             <td>Lieu de livraison</td>
                             <td>
-                                <input type="text" name="lieu"/>
+                                <input type="text" name="lieulivraison"/>
                             </td>
                         </tr>
                         <tr>
                             <td>PU (AR)</td>
-                            <td><input type="number" min={0} name="pu" id="" onKeyPress={this.onlyNumber}/></td>
+                            <td><input type="number" min={0} name="PU" id="" onKeyPress={this.onlyNumber}/></td>
                         </tr>
                         <tr>
                             <td colSpan={2}>

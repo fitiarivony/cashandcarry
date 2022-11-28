@@ -4,42 +4,22 @@ class ProSender extends Component {
     state = { 
         data:[
             {
-                coderessource: "239C",
-                intitule:"chiffon",
-                quantite:29,
+                id:0,
+                idressource:"",
+                intitule:"",
+                idachattype:"",
+                code:"",
+                totalquantite:0,
                 fournisseurs:[
-                    {
-                        id:"FRN1",
-                        nom:"Total"
-                    },
-                    {
-                        id:"FRN2",
-                        nom:"Jovenna"
-                    },
-                    {
-                        id:"FRN3",
-                        nom:"Galana"
-                    }
-                ]
-            },
-            {
-                coderessource: "239D",
-                intitule:"casque",
-                quantite:29,
-                fournisseurs:[
-                    {
-                        id:"FRN1",
-                        nom:"Total"
-                    },
-                    {
-                        id:"FRN2",
-                        nom:"Jovenna"
-                    },
-                    {
-                        id:"FRN3",
-                        nom:"Galana"
-                    }
-                ]
+                   {
+                        idfournisseur:"",
+                        nomfournisseur:"",
+                        adresse:"",
+                        contact:"",
+                        codefournisseur:"",
+                        idressource:""
+                   }
+                ],
             }
         ]
      } 
@@ -47,27 +27,93 @@ class ProSender extends Component {
         event.preventDefault();
         this.callchamp();
     }
+    
+    
     callchamp= () =>{
         var form = document.getElementById("myForm");
         var formData = new FormData(form);
-        var object = {};
-        formData.forEach((value, key) => object[key] = value);
-        var json = JSON.stringify(object);
-        console.log(formData);
-        console.log( json);
-        this.askRessources(URLHelper.urlgen("logAdmin/login.php?data="+json));
+        let object = {};
+        formData.forEach(
+            (value, key) =>{
+                if(object[key]!==undefined){
+                    let tableau=[];
+                    if(Array.isArray(object[key]))tableau=[...object[key]];
+                    else tableau.push(object[key]);
+                    tableau.push(value);
+                    object[key]=tableau;
+                }else{
+                    object[key] = value  
+                }
+                // console.log(key+"----"+value);
+               
+            } );
+
+        // var json = JSON.stringify(object);
+        let tableau=this.formatJSON(object);
+        this.sendProformat(tableau);
+        // this.askRessources(URLHelper.urlgen("logAdmin/login.php?data="+json));
     }
-    askRessources=(url)=>{
-        fetch(url,{crossDomain:true,method:'GET',headers:{}})
+    formatJSON=(json)=>{
+        let keys=Object.keys(json);
+        let array=[];
+        keys.forEach(key => {
+            let table=this.state.data.filter((demande=> demande.idressource=key))[0];
+           
+            if (Array.isArray(json[key])) {
+                for (const element of json[key]) {
+                    let proformat={
+                        reference:table.intitule,
+                        intitule:table.intitule,
+                        idressource:table.idressource,
+                        quantite:table.totalquantite,
+                        idfournisseur:element,
+                     }
+                     array.push(proformat);
+                }
+            }else{
+                let proformat={
+                    reference:table.intitule,
+                    intitule:table.intitule,
+                    idressource:table.idressource,
+                    quantite:table.totalquantite,
+                    idfournisseur:json[key]
+                 }
+                array.push(proformat);
+            }
+         });
+         return array;
+
+    }
+    sendProformat=(tableau)=>{
+        fetch(URLHelper.urlgen("api/Proformat_envoye"),{crossDomain:true,method:'POST',headers:{'Content-Type': 'application/json'},body: JSON.stringify(tableau)})
         .then(res=>{return res.json() ; })
         .then(data=>{ 
-            console.log(data);
+           
             if (data.etat) {
-                window.location.replace("/option")  
+                // console.log(data);
+                 window.location.replace("/option")  
             }else{
                 alert("erreur");
                 console.log("echec");
             }
+         })
+    }
+    constructor () {
+        super();
+         this.initialize();
+    }
+    initialize =()=> {
+        this.listRessource();
+    }
+    listRessource =()=> {
+        fetch(URLHelper.urlgen("api/Demande_ressource/details"),{crossDomain:true,method:'GET', headers: {}})
+        .then(res => { return res.json();})
+        .then(data=>{
+            this.setState(
+                {
+                     data: data, 
+                }
+            )
          })
     }
     render() { 
@@ -87,13 +133,13 @@ class ProSender extends Component {
                             
                             {this.state.data.map(el=>
                                 <tr>
-                                    <td>{el.coderessource}</td>
+                                    <td>{el.code}</td>
                                     <td>{el.intitule}</td>
-                                    <td>{el.quantite}</td>
+                                    <td>{el.totalquantite}</td>
                                     {el.fournisseurs.map(frn=>
                                     <td>
-                                        <input type="radio" name={"chb"+el.coderessource} value={frn.id} />
-                                        <label htmlFor="chb">{frn.nom}</label>
+                                        <input type="checkbox"  name={el.idressource} value={frn.idfournisseur} />
+                                        <label htmlFor="chb">{frn.nomfournisseur}</label>
                                     </td>
                                     )}
                                 </tr>
