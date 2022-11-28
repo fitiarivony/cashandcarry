@@ -13,7 +13,10 @@ class Login extends Component {
         var formData = new FormData(form);
         var object = {};
         formData.forEach((value, key) => object[key] = value);
-        this.askAnnee(URLHelper.urlgen("Admindept/login?identifiant="+object.identifiant+"&mdp="+object.mdp));
+        var json = JSON.stringify(object);
+        console.log(formData);
+        console.log( json);
+        this.askAnnee(URLHelper.urlgen("api/Admindept/login?data="+json));
     }
     askAnnee=(url)=>{
             // const navigate = useNavigate();
@@ -23,9 +26,8 @@ class Login extends Component {
         .then(data=>{ 
             console.log(data);
             if (data.etat) {
-                localStorage.setItem("iduser", data.data[0].idadmin);
-                localStorage.setItem("iddept", data.data[0].iddept);
-                window.location.replace("/demandeRessource")  
+                // console.log(data.data[0].iddept);
+                window.location.replace("/demandeRessource?iddept="+data.data[0].iddept);  
             }else{
                 alert("erreur");
                 console.log("echec");

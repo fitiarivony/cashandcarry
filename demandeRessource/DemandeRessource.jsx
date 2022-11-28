@@ -11,6 +11,12 @@ import '../assets/dist/css/bootstrap.min.css';
 class DemandeRessource extends Component {
     state = { 
         modal:false,
+        departement:{
+            id:0,
+            iddept:'',
+            nomdepartement:''
+        },
+
         data:[
             {
                 id:1,
@@ -18,7 +24,7 @@ class DemandeRessource extends Component {
                 quantite:0,
                 datelimite:"",
                 dateenvoi:"",
-                iddept:"DEP1",
+                iddept:new URLSearchParams(window.location.search).get('iddept'),
             }
         ],
         CRs : [
@@ -55,7 +61,7 @@ class DemandeRessource extends Component {
             quantite:0,
             datelimite:"",
             dateenvoi:"",
-            iddept:"DEP1",
+            iddept:this.state.departement.iddept,
         });
         this.setState({data:newData});
         // console.log(this.state);
@@ -118,6 +124,7 @@ class DemandeRessource extends Component {
         // this.askService(URLHelper.urlgen("testFA.php"));
         this.listeressource();
         this.listetype();
+        this.getInfoDept();
     }
 
     listeressource = () => {
@@ -143,13 +150,27 @@ class DemandeRessource extends Component {
             )
          })
     }
+    getInfoDept(){
+        const params = new URLSearchParams(window.location.search);
+        let data=params.get("iddept");
+        let sending={
+            "iddept":data,
+        }
+        // console.log(URLHelper.urlgen("api/Departement/login?data="+JSON.stringify(sending)));
+        fetch(URLHelper.urlgen("api/Departement/login?data="+JSON.stringify(sending)),{crossDomain:true,method:'GET', headers: {}})
+        .then(res => { return res.json();})
+        .then(data=>{
+            this.setState({ departement:data.data[0] })
+         })
+    }
+    
     cancel=(event)=>{
         event.preventDefault();
     }
     render() { 
         return (
             <div>
-                <h2>Departement: NomDepartement</h2>
+                <h2>Departement: {this.state.departement.nomdepartement}</h2>
                 <form action="" onSubmit={this.cancel} id="myForm">
                 <table style={{textAlign:"center"}}>
                     <thead>
