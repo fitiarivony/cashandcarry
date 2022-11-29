@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import LigneRessource from './LigneRessource';
 import URLHelper from '../Helper/URLHelper';
 
-import '../assets/dist/css/bootstrap.min.css';
-
+import   '../assets/dist/css/bootstrap.min.css';
+import   classes from '../assets/css/DemandeRessource.module.css';
+import '../assets/js/form-validation.js';
+import image from'../assets/images/abstract3.jpg';
 /* TODO:
 * liste déroulante code ressource
 * nomDepartment atao props
@@ -23,7 +25,7 @@ class DemandeRessource extends Component {
                 idressource:"",
                 quantite:0,
                 datelimite:"",
-                dateenvoi:"",
+                datedemande:"",
                 iddept:new URLSearchParams(window.location.search).get('iddept'),
             }
         ],
@@ -45,6 +47,7 @@ class DemandeRessource extends Component {
         
     } 
     
+    
         
     onlyNumber=(event) => {
         if (!/[0-9]/.test(event.key)) {
@@ -60,7 +63,7 @@ class DemandeRessource extends Component {
             idressource:"",
             quantite:0,
             datelimite:"",
-            dateenvoi:"",
+            datedemande:"",
             iddept:this.state.departement.iddept,
         });
         this.setState({data:newData});
@@ -98,7 +101,7 @@ class DemandeRessource extends Component {
         this.callchamp();
     }
     callchamp= () =>{
-        this.askRessources(URLHelper.urlgen("api/Besoin"));
+        this.askRessources(URLHelper.urlgen("api/Demande_ressource"));
     }
    
     askRessources=(url)=>{
@@ -114,11 +117,13 @@ class DemandeRessource extends Component {
             }
          })
     }
-    
+  
     constructor () {
         super();
          this.initialize();
+         
     }
+   
 
     initialize =()=> {
         // this.askService(URLHelper.urlgen("testFA.php"));
@@ -169,17 +174,19 @@ class DemandeRessource extends Component {
     }
     render() { 
         return (
+            <div  
+             className='element'>
+              
+            <div className={`card shadow mb-3 ${classes.carte}`} >
+                 <div class={`title-card card-header ${classes.titrecarte}`}>
+            <p className="text m-0 fw-bold"><h2>Departement: {this.state.departement.nomdepartement}</h2><small>Demande ressource</small></p>
+        </div>
+        <div style={{height:"50px"}}></div>
             <div>
-                <h2>Departement: {this.state.departement.nomdepartement}</h2>
-                <form action="" onSubmit={this.cancel} id="myForm">
+                
+                <form className="needs-validation" action="" onSubmit={this.cancel} id="myForm">
                 <table style={{textAlign:"center"}}>
-                    <thead>
-                        <tr>
-                            <th>Code ressources</th>
-                            <th>Quantite</th>
-                            <th>Date Limite</th>
-                        </tr>
-                    </thead>
+                  
                     <tbody>
                         {this.state.data.map( data =>
                             <LigneRessource 
@@ -194,7 +201,7 @@ class DemandeRessource extends Component {
                         
                         <tr>
                             <td colSpan={4}>
-                                <button onClick={this.handleSubmit} className="btn btn-primary">Continuer</button>
+                                <button onClick={this.handleSubmit} className={`btn btn-primary ${classes.bouton} `}>Continuer</button>
                             </td>
                         </tr>
                     </tbody>
@@ -202,6 +209,8 @@ class DemandeRessource extends Component {
                 </form>
                 
                 
+            </div>
+            </div>
             </div>
         );
     }

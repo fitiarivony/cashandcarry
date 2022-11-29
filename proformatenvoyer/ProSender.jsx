@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import URLHelper from '../Helper/URLHelper';
+ import classes from"../assets/css/ProformatEnvoyer.module.css";
+import "../assets/dist/css/bootstrap.min.css";
 class ProSender extends Component {
     state = { 
         data:[
@@ -119,7 +121,13 @@ class ProSender extends Component {
     render() { 
         return (    
             <div>
-                <h2>Proformat Envoyer</h2>
+
+        <div className={`card shadow mb-3 ${classes.carte}`} >
+                 <div class={`title-card card-header ${classes.titrecarte}`}>
+            <p className="text m-0 fw-bold"><h2>Envoyer proformat</h2></p>
+        </div>
+
+               
                 <form action="" id="myForm" onSubmit={this.handleSubmit} >
                     <table style={{textAlign:"center"}}>
                         <thead>
@@ -138,20 +146,23 @@ class ProSender extends Component {
                                     <td>{el.totalquantite}</td>
                                     {el.fournisseurs.map(frn=>
                                     <td>
-                                        <input type="checkbox"  name={el.idressource} value={frn.idfournisseur} />
-                                        <label htmlFor="chb">{frn.nomfournisseur}</label>
+                                        <div class="form-group form-check">
+                                        <input type="checkbox" className='form-check-input'  name={el.idressource} value={frn.idfournisseur} />
+                                        <label  className='form-check-label' htmlFor="chb">{frn.nomfournisseur}</label>
+                                        </div>
                                     </td>
                                     )}
                                 </tr>
                             )}
                             <tr>
                                 <td colSpan={4}>
-                                    <input type="submit" value="Soumettre" />
+                                    <input type="submit" className="btn btn-success" value="Soumettre" />
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </form>
+                </div>
             </div>
         );
     }

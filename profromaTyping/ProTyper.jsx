@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 
 import URLHelper from '../Helper/URLHelper';
-import FetchHelper from '../Helper/FetchHelper';
-
+import classes from '../assets/css/InsertProformat.module.css';
 
 class ProTyper extends Component {
     state = { 
@@ -53,15 +52,16 @@ class ProTyper extends Component {
         var json = JSON.stringify(object);
         console.log(formData);
         console.log( json);
-        this.askRessources(URLHelper.urlgen("logAdmin/login.php?data="+json));
+        this.askRessources(json);
     }
-    askRessources=(url)=>{
-        fetch(url,{crossDomain:true,method:'GET',headers:{}})
-        .then(res=>{return res.json() ; })
+    askRessources=(json)=>{
+        fetch(URLHelper.urlgen("api/Proformat_fournisseur"),{crossDomain:true,method:'POST',headers:{'Content-Type': 'application/json'},body: (json)})
+        .then(res=>{ console.log(res);
+            return res.json() ; })
         .then(data=>{ 
             console.log(data);
             if (data.etat) {
-                window.location.replace("/option")  
+                // window.location.replace("/option")  
             }else{
                 alert("erreur");
                 console.log("echec");
@@ -82,8 +82,16 @@ class ProTyper extends Component {
       }
     render() { 
         return (
-            <div>
-                <h2>Entrer proformat des fournisseurs</h2>
+            <div className='row'>
+                
+                <div className='col-md-1'></div>
+                <div className={`col-md-5 ${classes.image}`}></div>
+                <div className='col-md-6'>
+            <div class="card shadow mb-3">
+                <div class={`title-card card-header  ${classes.titrecarte}`}>
+            <p class="text m-0 fw-bold">Entrer Proformat des Fournisseurs</p>
+        </div>
+        <div class="card-body">
                 <form action="" id="myForm" style={{textAlign:"center"}} onSubmit={this.handleSubmit}>
                     <table>
                         <tr>
@@ -102,45 +110,48 @@ class ProTyper extends Component {
                         <tr>
                             <td>Reference demande</td>
                             <td>
-                                <input type="text" name="idreferencedemande" />
+                                <input class="form-control" type="text" name="idreferencedemande" />
                                 {/* <ReactSearchAutocomplete/> */}
                             </td>
                         </tr>
                         <tr>
                             <td>Qualite</td>
                             <td>
-                                <input type="text" name="qualite" />
+                                <input class="form-control" type="text" name="qualite" />
                             </td>
                         </tr>
                         <tr>
                             <td>Quantite</td>
                             <td>
-                                <input type="number" name="quantite" min={0} onKeyPress={this.onlyNumber}/>
+                                <input class="form-control" type="number" name="quantite" min={0} onKeyPress={this.onlyNumber}/>
                             </td>
                         </tr>
                         <tr>
                             <td>Delai de livraison</td>
                             <td>
-                                <input type="datetime-local" name="delailivraison" id="" />
+                                <input class="form-control" type="datetime-local" name="delailivraison" id="" />
                             </td>
                         </tr>
                         <tr>
                             <td>Lieu de livraison</td>
                             <td>
-                                <input type="text" name="lieulivraison"/>
+                                <input class="form-control" type="text" name="lieulivraison"/>
                             </td>
                         </tr>
                         <tr>
                             <td>PU (AR)</td>
-                            <td><input type="number" min={0} name="PU" id="" onKeyPress={this.onlyNumber}/></td>
+                            <td><input class="form-control" type="number" min={0} name="pu" id="" onKeyPress={this.onlyNumber}/></td>
                         </tr>
                         <tr>
                             <td colSpan={2}>
-                                <input type="submit" value="Inserer" />
+                                <input type="submit" className={`btn btn-success ${classes.bouton}`} value="Inserer" />
                             </td>
                         </tr>
                     </table>
                 </form>
+                </div>
+            </div>
+            </div>
             </div>
         );
     }

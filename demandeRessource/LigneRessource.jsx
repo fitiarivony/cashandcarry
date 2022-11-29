@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import Modal from 'react-modal';
 import URLHelper from '../Helper/URLHelper';
-import '../assets/dist/css/bootstrap.min.css';
+import   classes from '../assets/css/DemandeRessource.module.css';
 // import './../assets/dist/css/bootstrap.min.csrc/profromaTyping/ProTyper.jsxss'
 
 
@@ -53,7 +53,7 @@ class LigneRessource extends Component {
     }
     changeDE=(event)=>{
         let data=this.state.data;
-        data.dateenvoi=event.target.value;
+        data.datedemande=event.target.value;
         this.props.changeCR(data);
     }
     handleOnSelect = (item) => {
@@ -117,8 +117,10 @@ class LigneRessource extends Component {
     // }
     render() { 
 
-        return (<tr>
-            <td>
+        return (
+            <div className="row g-3">
+           <div className="col">
+           <label  className="form-label">Code ressource</label>
             <div className="App">
             
                 <div style={{ width: 200 }}>
@@ -129,28 +131,48 @@ class LigneRessource extends Component {
                     formatResult={this.formatResult}
                     onSelect={this.handleOnSelect}
                     showIcon={false}
-                    showNoResultsText={<button onClick={this.openModal}>create new one</button>}
+                    showNoResultsText={<button onClick={this.openModal} className='btn btn-info' style={{width:"150px"}}>create new one</button>}
                     showClear={false}
                     resultStringKeyName="intitule"
-                    />
-                    
-            
+                   required />
                 </div>
+                <div className="invalid-feedback">
+                                Code ressource requis
+                            </div>
             </div>
-            </td>
-            <td>
-                <input type="number" name={"Q"+this.props.data.id} onChange={this.changeQ} id="" value={this.props.data.quantite} onKeyPress={this.onlyNumber}  />
-            </td>
-            <td>
-                <input type="date" name={"DL"+this.props.data.id} id="" onChange={this.changeDL} value={this.props.data.datelimite} />
-            </td>
-            <td>
-                <input type="date" name={"DE"+this.props.data.id} id="" onChange={this.changeDE} value={this.props.data.dateenvoi} />
-            </td>
-            <td>
-                <button onClick={this.props.add} className="btn btn-success" >More</button>
-                <button onClick={()=>this.props.delete(this.props.data.id)} className="btn btn-danger" >Delete</button>
-            </td>
+            </div>
+            
+            <div className='col'>
+            <label  className="form-label">Quantite</label>
+                <input type="number" name={"Q"+this.props.data.id} onChange={this.changeQ} id="cc-number" value={this.props.data.quantite} onKeyPress={this.onlyNumber} className="form-control" required />
+                <div className="invalid-feedback">
+                                Quantite requis
+                            </div>
+            </div>
+
+            <div className='col'>
+            <label  className="form-label">Date limite</label>
+                <input type="date" className="form-control" name={"DL"+this.props.data.id} id="" onChange={this.changeDL} value={this.props.data.datelimite} required/>
+                <div className="invalid-feedback">
+                                Date limite requis
+                            </div>
+
+            </div>
+            <div className='col'>
+            <label  className="form-label">Date Envoi</label>
+                <input type="date"  className="form-control" name={"DE"+this.props.data.id} id="" onChange={this.changeDE} value={this.props.data.datedemande} required/>
+                <div className="invalid-feedback">
+                                Date Envoi requis
+                            </div>
+            </div>
+
+            <div className='col'>
+                <button onClick={this.props.add} className={`btn btn-success ${classes.bouton}`} id="btn_sub" >More</button>
+                <div style={{height:"10px"}}></div>
+                <button onClick={()=>this.props.delete(this.props.data.id)} className={`btn btn-danger ${classes.bouton}`} id="btn_sub" >Delete</button>
+            </div>
+           
+        
                 <Modal isOpen={this.state.modal} onAfterOpen={this.afterOpenModal} onRequestClose={this.closeModal}>
                     <form action="" id="Form2" >
                         <div className="mb-3">
@@ -170,11 +192,19 @@ class LigneRessource extends Component {
                             </select>
                             
                         </div>
-                        <button onClick={this.handleCreate} >Submit</button>
-                        <button onClick={this.closeModal}>Annuler</button>
+                        <div className='row'>
+                        <div className='col'>
+                        <button onClick={this.handleCreate} className={`btn btn-success ${classes.bouton}`} >Enregistrer</button>
+                        </div>
+                       <div className='col'>
+                       <button onClick={this.closeModal} className={`btn btn-warning ${classes.bouton}`} >Annuler</button>
+                       </div>
+                       </div>
+                       
                     </form>
                 </Modal>
-        </tr>);
+                <div style={{height:"50px"}}></div>
+                </div>);
     }
 }
  

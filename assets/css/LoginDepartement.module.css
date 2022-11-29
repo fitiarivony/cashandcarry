@@ -1,0 +1,36 @@
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Century Gothic',sans-serif;
+}
+
+body{
+    background: #F1EFEF;
+   
+}
+.submit{
+    margin-left: 100px;
+    width: 375px;
+    height: 40px;
+    border-radius: 6px;
+    border:none;
+    background-color: #1ab035;
+    color: #FFEFFA;
+    font-size: 1.1em!important;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+.submit:hover{
+    background: #effff5!important;
+    color: #01671d!important;
+    border: 1px solid #000000!important;
+}
+.image{
+    margin-right: 55px;
+    background-image:url('../images/login_admindept.jpg');
+    background-position: center;
+    background-size:490px;
+   
+}

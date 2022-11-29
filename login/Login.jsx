@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
-import URLHelper from '../Helper/URLHelper'
+import URLHelper from '../Helper/URLHelper';
+// CSS
+import "../assets/css/form-validation.css";
+import "../assets/dist/css/bootstrap.min.css";
+import classes from "../assets/css/LoginDepartement.module.css";
+
 class Login extends Component {
     state = {  } 
     handleSubmit=(event) => {
@@ -34,29 +39,40 @@ class Login extends Component {
             }
          })
     }
+   
     render(){
-        return <div>
-            <form action="" id='myForm' onSubmit={this.handleSubmit}>
-                <table>
-                    <tr>
-                        <td>Login</td>
-                        <td>
-                            <input type="text" name="identifiant" id="" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>mot de passe</td>
-                        <td>
-                            <input type="text" name="mdp" id="" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colSpan={2}>
-                            <input type="submit" />
-                        </td>
-                    </tr>
-                </table>
+        return <div className="container">
+            
+             
+            <div className='row'>
+            <div className={`col ${classes.image}`}>
+               
+            </div>
+
+         
+             <div className='col'>
+             <h1>Login departement</h1>
+                <hr className="tirer mb-4"/>
+            <form action="" className="needs-validation" id='myForm' onSubmit={this.handleSubmit}>
+            <div>
+                <input type="text" name="identifiant" id="" className="form-control" placeholder="Email"   required />
+            </div>
+            <br/>
+            <div>
+            <input type="text" name="mdp" className="form-control"  placeholder="Mot de passe" id="password" required />
+                        
+                    </div>
+                <br/>           
+                    
+                            <p><input className={classes.submit} type="submit" /></p>
+                        
+               
             </form>
+            </div>
+            </div>
+
+
+             
         </div>
     }
 }
