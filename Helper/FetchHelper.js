@@ -1,4 +1,15 @@
 class FetchHelper{
+    static postData=(url, postobj)=>{
+        const options = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(postobj)
+              };
+        fetch(url, options)
+            .then(response => response.json())
+            .then(response => console.log(response))
+            .catch(err => console.error(err));
+    }
     static getData=(url)=>{
         let receiving=[];
         fetch(url,{crossDomain:true,method:'GET',headers:{}})
@@ -6,13 +17,10 @@ class FetchHelper{
         .then(data=>{ 
             //  console.log(data);
             receiving=[...data];
-            console.log(receiving);
          })
          console.log(receiving);
          return receiving;
     }
-
-    
     getDataPost=(url,info)=>{
         // main.js
 
