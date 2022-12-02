@@ -5,7 +5,6 @@ create sequence admindept_seq;
 create sequence dept_seq;
 create sequence societe_seq;
 create sequence achattype_seq;
--- create sequence besoin_seq;
 create sequence produit_seq;
 create sequence ressource_seq;
 create sequence demanderessource_seq;
@@ -74,23 +73,6 @@ insert into ressource(intitule,idachattype,code) values
 ('Fournitures','ACH2','KO9')
 ;
 
--- create table besoin(
---     id serial,
---     idbesoin varchar(10) default 'BES'||nextval('besoin_seq') primary key,
---     quantite float not null default 1,
---     iddept varchar(10),
---     idressource varchar(10),
---      dateEnvoi timestamp not null default current_timestamp,
---     dateLimite timestamp not null default current_timestamp,
---     FOREIGN KEY (idressource) REFERENCES ressource(idressource)
--- );
--- insert into besoin (quantite,iddept,idressource) values 
--- (1,'DEP1','RES1'),
--- (2,'DEP2','RES2'),
--- (2,'DEP4','RES2')
--- ;
-
-
 
 
 create table fournisseur(
@@ -131,9 +113,15 @@ create table demande_ressource(
     iddept varchar(10),
     datedemande date,
     dateLimite timestamp,
+    etat integer default 0,
     FOREIGN KEY (idressource) REFERENCES ressource(idressource),
     FOREIGN KEY (iddept) REFERENCES departement(iddept) 
 );
+insert into demande_ressource(idressource,quantite,iddept,datedemande,dateLimite) values
+('RES1',4,'DEP1','20/03/2022','23/12/2022'),
+('RES1',10,'DEP2','20/03/2022','23/12/2022')
+;
+
 
 create table proformat_envoye(
     id serial,
@@ -145,7 +133,12 @@ create table proformat_envoye(
     idfournisseur varchar(10),
     FOREIGN KEY (idressource) REFERENCES ressource(idressource),
     FOREIGN KEY (idfournisseur) REFERENCES fournisseur(idfournisseur)
-);
+);                                            
+insert into proformat_envoye(reference, idressource, intitule, idfournisseur,quantite)values
+('DO1','RES1','Achat chaussure','FOU2',14),
+('DO2','RES1','Achat chaussure','FOU4',14),
+('DO3','RES1','Achat chaussure','FOU5',14)
+;
 
 create table proformat_fournisseur(
     id serial,
@@ -157,9 +150,15 @@ create table proformat_fournisseur(
     delailivraison timestamp not null,
     lieulivraison varchar(40) not null,
     PU integer,
-    daty date,
-    FOREIGN KEY (idfournisseur) REFERENCES fournisseur (idfournisseur)
+    daty date default current_timestamp,
+    FOREIGN KEY (idfournisseur) REFERENCES fournisseur (idfournisseur),
+    FOREIGN KEY (idreferencedemande) REFERENCES proformat_envoye(idprenvoye)
 );
+insert into proformat_fournisseur(idfournisseur,idreferencedemande,qualite,quantite,delailivraison,lieulivraison,pu,daty) values
+('FOU2','PRE1','Cuir',14,'10/04/2022','Analakely',50000,'01/04/2022'),
+('FOU4','PRE2','Dain',10,'11/04/2022','Antanimena',60000,'01/04/2022'),
+('FOU5','PRE3','Cuir',5,'12/04/2022','Ankadifotsy',45000,'02/04/2022')
+;
 
 create table superuser(
     identifiant varchar(40) not null,
@@ -173,19 +172,88 @@ insert into superuser(identifiant,mdp) values
 create view tri as
 select demande_ressource.idressource,sum(quantite) totalquantite from demande_ressource 
 join ressource 
-on demande_ressource.idressource=ressource.idressource group by demande_ressource.idressource;
+on demande_ressource.idressource=ressource.idressource where etat=0 group by demande_ressource.idressource;
 
 create view triage as
-select ressource.*,totalquantite from tri join ressource on ressource.idressource=tri.idressource;
+select ressource.*,totalquantite from tri join ressource on ressource.idressource=tri.idressource ;
 
 create view pourcentage  as
 select triage.*,iddemande_ressource,iddept,quantite, (quantite::double precision/totalquantite::double precision)*100 pourcentage from triage 
 join demande_ressource 
-on demande_ressource.idressource=triage.idressource;
+on demande_ressource.idressource=triage.idressource where etat=0;
 
 create view fourniss_ress_info as 
 select fournisseur.*,idressource
 from fournisseurressource
 join fournisseur
 on fournisseur.idfournisseur=fournisseurressource.idfournisseur
+;
+
+create table detailsformat(
+    iddetail serial primary key,
+    intitule varchar(60) not null,
+    coeff float not null
+);
+insert into detailsformat(intitule, coeff) values
+('Prix',4),('Qualite',2),('Quantite',2.5)
+;
+
+create table noteproformat(
+    id serial primary key,
+    iddetail integer,
+    note double precision,
+    idproformat varchar(10),
+    FOREIGN KEY (idproformat) REFERENCES proformat_fournisseur(idproformat_fournisseur),
+    FOREIGN KEY (iddetail) REFERENCES detailsformat(iddetail)
+);
+insert into noteproformat(iddetail,note,idproformat) values
+(1,14,'PRO1'),(2,12,'PRO1'),(3,20,'PRO1'),
+(1,11,'PRO2'),(2,17,'PRO2'),(3,15,'PRO2'),
+(1,16,'PRO3'),(2,12,'PRO3'),(3,9,'PRO3')
+;
+
+create table bondecommandevalider(
+    iddemande varchar(10),
+    idfournisseur varchar(10),
+    daty date,
+    FOREIGN KEY (iddemande) REFERENCES demande_ressource(iddemande_ressource),
+    FOREIGN KEY (idfournisseur) REFERENCES fournisseur(idfournisseur)
+);
+
+
+--Triage des proposition proformat 
+create view classement_proformat as   
+select 
+alias.*,
+proformat_fournisseur.idfournisseur,
+proformat_envoye.idprenvoye,idressource,intitule
+from
+(select 
+sum(note*coeff)/sum(coeff) note,idproformat 
+from noteproformat
+join detailsformat 
+on detailsformat.iddetail=noteproformat.iddetail
+group by idproformat order by sum(note*coeff)/sum(coeff) desc) as alias
+join proformat_fournisseur 
+on proformat_fournisseur.idproformat_fournisseur=alias.idproformat
+join proformat_envoye 
+on proformat_envoye.idprenvoye=proformat_fournisseur.idreferencedemande
+;
+ 
+create view envoye_fournisseur as
+select
+idproformat_fournisseur,proformat_fournisseur.idfournisseur,idreferencedemande,qualite,
+proformat_fournisseur.quantite,lieulivraison,delailivraison,pu,idressource,proformat_envoye.quantite besoin,
+proformat_envoye.idprenvoye
+ from proformat_fournisseur 
+join proformat_envoye
+on proformat_envoye.idprenvoye=proformat_fournisseur.idreferencedemande
+;
+
+create view classement_demande as
+select envoye_fournisseur.*,note,pourcentage.iddemande_ressource,pourcentage.quantite demande_quantite from pourcentage join
+envoye_fournisseur 
+on envoye_fournisseur.besoin=pourcentage.totalquantite and envoye_fournisseur.idressource=pourcentage.idressource
+join classement_proformat
+on  classement_proformat.idprenvoye=envoye_fournisseur.idprenvoye
 ;
