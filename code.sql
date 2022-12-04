@@ -11,6 +11,7 @@ create sequence demanderessource_seq;
 create sequence fournisseur_seq;
 create sequence prenvoye_seq;
 create sequence proformatfournisseur_seq;
+create sequence stock_seq;
 
 create table departement(
     id serial,
@@ -257,3 +258,21 @@ on envoye_fournisseur.besoin=pourcentage.totalquantite and envoye_fournisseur.id
 join classement_proformat
 on  classement_proformat.idprenvoye=envoye_fournisseur.idprenvoye
 ;
+
+create view proformat_fournisseur_detail as
+select envoye_fournisseur.*,
+nomfournisseur,adresse,contact,codefournisseur
+from envoye_fournisseur
+join fournisseur on
+fournisseur.idfournisseur=envoye_fournisseur.idfournisseur;
+
+
+create table mouvement_stock(
+    idstock varchar(10) default 'STO'||nextval('stock_seq') primary key,
+    idressource varchar(10),
+    pu float not null,
+    quantite float not null,
+    datesortie timestamp default CURRENT_TIMESTAMP,
+    FOREIGN KEY (idressource) REFERENCES ressource(idressource)
+);
+
