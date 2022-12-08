@@ -26,6 +26,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 ///personnalise
+//Moins disant
+Route::get('/listeressource',[Proformat_fournisseur_controller::class,"getRessource"]);
+Route::get('/moinsdisant',[Proformat_fournisseur_controller::class,"orderMoinsDisant"]);
+
+//Bon de commande
 Route::get('/getNoninserer',[Proformat_fournisseur_controller::class,"getNonInserer"]);
 Route::post('/boncommande',[PdfController::class,"index"]);
 Route::get('/fournisseurspro',[Proformat_fournisseur_controller::class,"getFournisseurs"]);

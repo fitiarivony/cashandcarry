@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fournisseurs;
 use App\Models\Proformat_envoye;
 use App\Models\Proformat_fournisseur;
 use App\Models\Proformat_fournisseur_demande;
 use App\Models\Proformat_fournisseur_detail;
+use App\Models\Ressource;
+use App\Models\Triage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -37,6 +40,29 @@ class Proformat_fournisseur_controller extends Controller
         $proformatsfournisseurs = Proformat_fournisseur::where('idreferencedemande', $idreferencedemande)->get();
         return $proformatsfournisseurs;
     }
+    public function orderMoinsDisant(Request $request){
+        $parameters=$request->query->all()["data"];
+        $parameters=json_decode($parameters,true);
+        $proformatsfournisseurs=(new Proformat_fournisseur_detail())
+        ->join("ressource","ressource.idressource","proformat_fournisseur_detail.idressource")
+        ->where('proformat_fournisseur_detail.idressource',$parameters['idressource'])
+        ->get();
+        $triage=(new Triage())->where('idressource',$parameters['idressource'])->get()->first();
+        $array=array();
+        array_push($array,$proformatsfournisseurs);
+        array_push($array,$triage);
+        return json_encode(array("etat"=>true,"data"=>$array));
+    }
+    public function getRessource() {
+        $query=(new Triage())->all();
+    //
+        return  json_encode(array("etat"=>true,"data"=>$query));
+    }
+
+
+
+
+
     public function getProformat_fournisseur(Request $request){
         $parameters=$request->query->all()["data"];
         $parameters=json_decode($parameters,true);
@@ -44,11 +70,16 @@ class Proformat_fournisseur_controller extends Controller
         ->join("ressource","ressource.idressource","proformat_fournisseur_detail.idressource")
         ->where('idfournisseur',$parameters['idfournisseur'])
         ->get();
-        return  $proformatsfournisseurs;
+        return $proformatsfournisseurs;
     }
-    public function getFournisseurs(){
+    public function getFournisseurs() {
         $query=(new Proformat_fournisseur_demande()) ->select('idfournisseur')->distinct()->where('etat',0);
-       return $query->get();
+       $query=$query->get();
+       $array=array();
+       foreach ($query as $key => $value) {
+        array_push($array,(new Fournisseurs())->where('idfournisseur',$value['idfournisseur'])->get()->first());
+       }
+        return  json_encode(array("etat"=>true,"data"=>$array));
     }
 
 
