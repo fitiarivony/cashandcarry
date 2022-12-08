@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Termwind\Components\Dd;
-
+use Codedge\Fpdf\Fpdf\Fpdf;
 class General extends Controller
 {
     /**
@@ -124,6 +124,18 @@ class General extends Controller
     {
         //
     }
+
+    public function topdf()
+    {
+        $pdf = new Fpdf;
+        $pdf->AddPage();
+        $pdf->SetFont('Arial','B',16);
+        $pdf->Cell(40,10,'Hello World !');
+        $pdf->Cell(23,45,'ESSAI');
+        $pdf->Output();
+    }
+
+
 
     /**
      * Remove the specified resource from storage.

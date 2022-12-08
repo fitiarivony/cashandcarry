@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Fournisseurressources extends Model
+class NoteProformat extends Model
 {
     use HasFactory;
-
-    protected $table = 'fournisseurressource';
+    protected $table = 'noteproformat';
     public $timestamps = false;
     public $incrementing = false;
     protected $fillable = [
-        'idressource',
-        'idfournisseur',
+        'note',
+        'iddetailsproformat',
+        'idproformat'
     ];
 }

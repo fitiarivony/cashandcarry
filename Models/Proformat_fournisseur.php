@@ -11,4 +11,6 @@ class Proformat_fournisseur extends Model
     protected $table = 'proformat_fournisseur';
     public $timestamps = false;
     public $incrementing = false;
+    protected $fillable=
+    ['idfournisseur','idreferencedemande','qualite','quantite','delailivraison','lieulivraison','pu'];
 }

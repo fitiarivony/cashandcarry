@@ -5,15 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Fournisseurressources extends Model
+class Envoye_fournisseur extends Model
 {
     use HasFactory;
-
-    protected $table = 'fournisseurressource';
+    protected $table = 'envoye_fournisseur';
     public $timestamps = false;
     public $incrementing = false;
-    protected $fillable = [
-        'idressource',
-        'idfournisseur',
-    ];
 }
