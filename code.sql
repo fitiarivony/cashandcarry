@@ -103,7 +103,8 @@ insert into fournisseurressource values
 ('RES2','FOU1'),
 ('RES3','FOU3'),
 ('RES1','FOU4'),
-('RES1','FOU5')
+('RES1','FOU5'),
+('RES2','FOU5')
 ;
 
 create table demande_ressource(
@@ -120,7 +121,8 @@ create table demande_ressource(
 );
 insert into demande_ressource(idressource,quantite,iddept,datedemande,dateLimite) values
 ('RES1',4,'DEP1','20/03/2022','23/12/2022'),
-('RES1',10,'DEP2','20/03/2022','23/12/2022')
+('RES1',10,'DEP2','20/03/2022','23/12/2022'),
+('RES2',10,'DEP3','20/03/2022','23/12/2022')
 ;
 
 
@@ -132,6 +134,7 @@ create table proformat_envoye(
     intitule varchar(50) not null,
     quantite float,
     idfournisseur varchar(10),
+    
     FOREIGN KEY (idressource) REFERENCES ressource(idressource),
     FOREIGN KEY (idfournisseur) REFERENCES fournisseur(idfournisseur)
 );                                            
@@ -201,13 +204,13 @@ insert into detailsformat(intitule, coeff) values
 
 create table noteproformat(
     id serial primary key,
-    iddetail integer,
+    iddetailproformat integer,
     note double precision,
     idproformat varchar(10),
     FOREIGN KEY (idproformat) REFERENCES proformat_fournisseur(idproformat_fournisseur),
-    FOREIGN KEY (iddetail) REFERENCES detailsformat(iddetail)
+    FOREIGN KEY (iddetailproformat) REFERENCES detailsformat(iddetail)
 );
-insert into noteproformat(iddetail,note,idproformat) values
+insert into noteproformat(iddetailproformat,note,idproformat) values
 (1,14,'PRO1'),(2,12,'PRO1'),(3,20,'PRO1'),
 (1,11,'PRO2'),(2,17,'PRO2'),(3,15,'PRO2'),
 (1,16,'PRO3'),(2,12,'PRO3'),(3,9,'PRO3')
@@ -233,7 +236,7 @@ from
 sum(note*coeff)/sum(coeff) note,idproformat 
 from noteproformat
 join detailsformat 
-on detailsformat.iddetail=noteproformat.iddetail
+on detailsformat.iddetail=noteproformat.iddetailproformat
 group by idproformat order by sum(note*coeff)/sum(coeff) desc) as alias
 join proformat_fournisseur 
 on proformat_fournisseur.idproformat_fournisseur=alias.idproformat
@@ -259,12 +262,41 @@ join classement_proformat
 on  classement_proformat.idprenvoye=envoye_fournisseur.idprenvoye
 ;
 
+-- Proformat info
 create view proformat_fournisseur_detail as
 select envoye_fournisseur.*,
 nomfournisseur,adresse,contact,codefournisseur
 from envoye_fournisseur
 join fournisseur on
-fournisseur.idfournisseur=envoye_fournisseur.idfournisseur;
+fournisseur.idfournisseur=envoye_fournisseur.idfournisseur
+;
+
+create or replace view proformat_fournisseur_demande as
+select envoye_fournisseur.*,pourcentage.iddemande_ressource,demande_ressource.etat,
+nomfournisseur,adresse,contact,codefournisseur,
+pourcentage.intitule,pourcentage.idachattype,pourcentage.code
+from envoye_fournisseur join pourcentage
+on envoye_fournisseur.besoin=pourcentage.totalquantite and envoye_fournisseur.idressource=pourcentage.idressource
+join fournisseur on
+fournisseur.idfournisseur=envoye_fournisseur.idfournisseur
+join demande_ressource on demande_ressource.iddemande_ressource=pourcentage.iddemande_ressource
+order by pu
+;
+
+create or replace view proformat_fournisseur_demandes as
+select idproformat_fournisseur,array(select (iddemande_ressource) from proformat_fournisseur_demande where idproformat_fournisseur=pro.idproformat_fournisseur)
+from proformat_fournisseur_demande as pro  group by idproformat_fournisseur;
+
+create view proformat_fournisseur_demande_ressource as
+select
+envoye_fournisseur.*,
+proformat_fournisseur_demandes.array reference,
+intitule,idachattype,code 
+from proformat_fournisseur_demandes
+join envoye_fournisseur 
+on envoye_fournisseur.idproformat_fournisseur=proformat_fournisseur_demandes.idproformat_fournisseur
+join ressource on ressource.idressource=envoye_fournisseur.idressource
+;
 
 
 create table mouvement_stock(
@@ -272,7 +304,10 @@ create table mouvement_stock(
     idressource varchar(10),
     pu float not null,
     quantite float not null,
+    idsociete varchar(10),
     datesortie timestamp default CURRENT_TIMESTAMP,
     FOREIGN KEY (idressource) REFERENCES ressource(idressource)
 );
+
+
 
