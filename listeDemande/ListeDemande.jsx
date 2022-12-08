@@ -15,7 +15,7 @@ class ListeDemande extends Component {
     ]}
     constructor(){
         super();
-        this.state = {inf:FetchHelper.getData("aiza")};
+      //  this.state = {inf:FetchHelper.getData("aiza")};
     } 
     render() { 
         return (

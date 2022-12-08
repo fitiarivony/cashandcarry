@@ -7,27 +7,27 @@ class Info extends Component {
                 <table>
                     <tr>
                         <td>Fournisseur:</td>
-                        <td>{this.props.inf.fournisseur}</td>
+                        <td>{this.props.inf.nomfournisseur}</td>
                     </tr>
                     <tr>
                         <td>Ref:</td>
-                        <td>{this.props.inf.ref}</td>
+                        <td>{this.props.inf.idreferencedemande}</td>
                     </tr>
                     <tr>
                         <td>Qualite:</td>
-                        <td>{this.props.inf.qlty}</td>
+                        <td>{this.props.inf.qualite}</td>
                     </tr>
                     <tr>
                         <td>Quantite</td>
-                        <td>{this.props.inf.qty}</td>
+                        <td>{this.props.inf.quantite}</td>
                     </tr>
                     <tr>
                         <td>Delai livraison</td>
-                        <td>{this.props.inf.date}</td>
+                        <td>{this.props.inf.delailivraison}</td>
                     </tr>
                     <tr>
                         <td>lieu</td>
-                        <td>{this.props.inf.lieu}</td>
+                        <td>{this.props.inf.lieulivraison}</td>
                     </tr>
                     <tr>
                         <td>PU(AR)</td>

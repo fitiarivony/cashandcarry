@@ -1,31 +1,28 @@
+
 class FetchHelper{
-    static postData=(url, postobj)=>{
-        const options = {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(postobj)
-              };
-        fetch(url, options)
-            .then(response => response.json())
-            .then(response => console.log(response))
-            .catch(err => console.error(err));
+     static getData= async (url)=>{
+       
+       const response=await fetch(url,
+        {
+            crossDomain:true,
+            method:'GET',
+            headers:{}
+        })
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+      
+        // console.log(data);
+        return  data;
     }
-    static getData=(url)=>{
-        let receiving=[];
-        fetch(url,{crossDomain:true,method:'GET',headers:{}})
-        .then(res=>{return res.json() ; })
-        .then(data=>{ 
-            //  console.log(data);
-            receiving=[...data];
-         })
-         console.log(receiving);
-         return receiving;
-    }
-    getDataPost=(url,info)=>{
+
+    
+   static getDataPost=async (url,info)=>{
         // main.js
 
     // POST request using fetch()
-        fetch(url, {
+       const response=await fetch(url, {
         
             // Adding method type
             method: "POST",
@@ -38,14 +35,11 @@ class FetchHelper{
                 "Content-type": "application/json; charset=UTF-8"
             }
         })
-
-        // Converting to JSON
-        .then(response => response.json())
-
-        // Displaying results to console
-        .then(json =>{ console.log(json);
-        return json ;   });
-
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
     }
 }
 

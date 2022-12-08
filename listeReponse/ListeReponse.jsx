@@ -1,32 +1,36 @@
 import React, { Component } from 'react';
 import FetchHelper from '../Helper/FetchHelper';
 import LigneReponse from './LigneReponse';
+import URLHelper from '../Helper/URLHelper';
 class ListeReponse extends Component {
     state = { 
         inf:[{
-            id:1,
-            nomProduit: "test",
-            ref:"ref12345",
-            date:"2020-05-23"
-        },
-        {
-            id:2,
-            nomProduit: "test2",
-            ref:"ref12345",
-            date:"2020-05-23"
+            delailivraison:"",
+            intitule: "",
+            reference:"",
         }]
      } 
     constructor(){
         super();
-        this.state = {inf:FetchHelper.getData("aiza")};
+    //    this.state = {inf:FetchHelper.getData(URLHelper.urlgen("api/Proformat_fournisseur_demande_ressource"))};
+    this.listProformatRecu();
+    }
+    listProformatRecu=async ()=>{
+        const val=await (FetchHelper.getData(URLHelper.urlgen("api/Proformat_fournisseur_demande_ressource")));
+        this.setState({inf:val});
     }
     
     render() { 
         return (
-            <div>
+            <div className="container card shadow mb-3">
+                <div className="title-card card-header bg-info">
+                        <p className="text m-0 ">Liste des reponses des Fournisseurs</p>
+                    </div>
+                    <div className=" container card-body">
                 {this.state.inf.map(el=>
                     <LigneReponse inf={el}></LigneReponse>    
                 )}
+                </div>
             </div>
         );
     }

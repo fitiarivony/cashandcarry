@@ -2,44 +2,81 @@ import React, { Component } from 'react';
 import Info from './Info';
 import FicheNote from './FicheNote';
 import '../assets/css/bootstrap.min.css';
-import FetchHelper from '../Helper/FetchHelper';
+import URLHelper from '../Helper/URLHelper';
+import image from '../assets/images/noteproformat.jpg';
+
 class EvalProf extends Component {
     state = { 
-        ind:"PE1",
+        ind:new URLSearchParams(window.location.search).get("idproformat"),
         inf:{
-            fournisseur:"Chomage Mad",
-            ref:"ref1234",
-            qlty: "chiffon bleu",
-            qty: 200,
-            date: "2022-03-01",
-            lieu: "dans la societe",
-            pu:4000
+            idproformat_fournisseur:"",
+            idfournisseur:"",
+            idreferencedemande:"",
+            qualite: "",
+            quantite: 0,
+            delailivraision:new Date(),
+            lieulivraison: "",
+            pu:0,
+            idressource:"",
+            nomfournisseur:""
         },
         detailsprof:[{
-            id: 1,
-            intitule: "test",
-            coefficient: 4
-        },
-        {
-            id: 2,
-            intitule: "test2",
-            coefficient: 3
+            iddetail:0,
+            intitule: "",
+            coefficient: 0
         }]
      } 
      constructor () {
         super();
-        const params = new URLSearchParams(window.location.search);
-        this.setState({ind:params.get("ind")});                              //indice proformat fournisseur
-        this.setState({inf:FetchHelper.getData("test")});       // maka information proformat fournisseur
-        this.setState({detailsprof:FetchHelper.getData("test")})// maka detail 
+        let json={
+            idproformat_fournisseur:this.state.ind,
+            iddemande_ressource:new URLSearchParams(window.location.search).get("iddemande")
+        }
+     this.getProformat_fournisseurs(json);
+     this.listdetail();
+        //this.setState({detailsprof:FetchHelper.getData("test")})// maka detail 
     } 
+     getProformat_fournisseurs=(json)=>{
+       
+        fetch(URLHelper.urlgen("api/Proformat_fournisseur_demande/login?data="+JSON.stringify(json)),{crossDomain:true,method:'GET',headers:{}})
+        .then(res=>{return res.json() ; })
+        .then(data=>{ 
+            this.setState({inf:data.data[0]});
+         })
+      
+    }
+    listdetail=()=>{
+        
+        fetch(URLHelper.urlgen("api/Detailsformat"),{crossDomain:true,method:'GET',headers:{}})
+        .then(res=>{return res.json() ; })
+        .then(data=>{ 
+            this.setState({detailsprof:data});
+            return null;
+         })
+    }
     render() { 
         
         return (
             <React.Fragment>
+                <div className="card shadow mb-3">
+                <div className="title-card card-header bg-info">
+                    <p className="text m-0 fw-bold">Evaluer Proformat  du fournisseur</p>
+                </div>
+                <div className="card-body">
+                <div className="container">
                 <div className='row'>
+                    <div className='col'>
                     <Info inf={this.state.inf}></Info>
-                    <FicheNote details={this.state.detailsprof} ind={this.state.ind}></FicheNote>
+                    </div>
+                   <div className='col'>
+                   <FicheNote details={this.state.detailsprof} ind={this.state.ind}></FicheNote>
+                   </div>
+                   
+                  
+                    
+                </div>
+                </div>
+                </div>
                 </div>
             </React.Fragment>
         );

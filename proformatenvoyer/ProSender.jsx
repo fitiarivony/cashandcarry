@@ -49,18 +49,22 @@ class ProSender extends Component {
                 // console.log(key+"----"+value);
                
             } );
-
-        // var json = JSON.stringify(object);
+            // console.log(object);
+        //  var json = JSON.stringify(object);
+        console.log(this.state.data);
         let tableau=this.formatJSON(object);
+      
         this.sendProformat(tableau);
         // this.askRessources(URLHelper.urlgen("logAdmin/login.php?data="+json));
     }
     formatJSON=(json)=>{
         let keys=Object.keys(json);
         let array=[];
+       
         keys.forEach(key => {
-            let table=this.state.data.filter((demande=> demande.idressource=key))[0];
-           
+            
+            let table=this.state.data.filter((demande=> demande.idressource===key))[0];
+            
             if (Array.isArray(json[key])) {
                 for (const element of json[key]) {
                     let proformat={
@@ -83,17 +87,19 @@ class ProSender extends Component {
                 array.push(proformat);
             }
          });
+        //  console.log(array);
          return array;
 
     }
     sendProformat=(tableau)=>{
+        // console.log(tableau);
         fetch(URLHelper.urlgen("api/Proformat_envoye"),{crossDomain:true,method:'POST',headers:{'Content-Type': 'application/json'},body: JSON.stringify(tableau)})
         .then(res=>{return res.json() ; })
         .then(data=>{ 
            
             if (data.etat) {
                 // console.log(data);
-                 window.location.replace("/option")  
+                  window.location.replace("/")  
             }else{
                 alert("erreur");
                 console.log("echec");
@@ -103,6 +109,7 @@ class ProSender extends Component {
     constructor () {
         super();
          this.initialize();
+        
     }
     initialize =()=> {
         this.listRessource();
@@ -118,13 +125,18 @@ class ProSender extends Component {
             )
          })
     }
+   
     render() { 
         return (    
             <div>
-
+                <center>
+                <h2 className="title">Envoyer proformat</h2>
+                </center>
+                <br />
+                <br />
         <div className={`card shadow mb-3 ${classes.carte}`} >
-                 <div class={`title-card card-header ${classes.titrecarte}`}>
-            <p className="text m-0 fw-bold"><h2>Envoyer proformat</h2></p>
+                 <div class={`title-card card-header bg-danger ${classes.titrecarte}`}>
+            <p className="text m-0 fw-bold"><h6>Liste des demandes déjà trié</h6></p>
         </div>
 
                
@@ -147,7 +159,7 @@ class ProSender extends Component {
                                     {el.fournisseurs.map(frn=>
                                     <td>
                                         <div class="form-group form-check">
-                                        <input type="checkbox" className='form-check-input'  name={el.idressource} value={frn.idfournisseur} />
+                                        <input type="checkbox"  className='form-check-input'  name={el.idressource} value={frn.idfournisseur} />
                                         <label  className='form-check-label' htmlFor="chb">{frn.nomfournisseur}</label>
                                         </div>
                                     </td>

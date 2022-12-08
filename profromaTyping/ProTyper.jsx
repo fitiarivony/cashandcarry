@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 
 import URLHelper from '../Helper/URLHelper';
+import FetchHelper from '../Helper/FetchHelper';
 import classes from '../assets/css/InsertProformat.module.css';
 
 class ProTyper extends Component {
@@ -13,6 +14,17 @@ class ProTyper extends Component {
                 adresse:"",
                 contact:"",
                 codefournisseur:"",
+            }
+        ],
+        listproformat:[
+            {
+                id:0,
+                idprenvoye:"",
+                reference:"",
+                idressource:"",
+                intitule:"",
+                quantite:"",
+                idfournisseur:"",
             }
         ]
      }
@@ -61,7 +73,7 @@ class ProTyper extends Component {
         .then(data=>{ 
             console.log(data);
             if (data.etat) {
-                // window.location.replace("/option")  
+                 window.location.replace("/")  
             }else{
                 alert("erreur");
                 console.log("echec");
@@ -79,9 +91,19 @@ class ProTyper extends Component {
       }
       handleOnSelect = (item) => {
          document.getElementById("idfournisseur").value=item.idfournisseur;
+         this.findDemandeProformat(item.idfournisseur);
+      }
+      findDemandeProformat=async(idfournisseur)=>{
+        let json={
+            idfournisseur:idfournisseur
+        };
+           const val=await(FetchHelper.getData(URLHelper.urlgen("api/getNoninserer?data="+JSON.stringify(json))));
+           this.setState({listproformat:val.data})
       }
     render() { 
+        // console.log(this.state.listproformat)
         return (
+           
             <div className='row'>
                 
                 <div className='col-md-1'></div>
@@ -110,8 +132,14 @@ class ProTyper extends Component {
                         <tr>
                             <td>Reference demande</td>
                             <td>
-                                <input class="form-control" type="text" name="idreferencedemande" />
-                                {/* <ReactSearchAutocomplete/> */}
+                                {/* <input class="form-control" type="text" name="idreferencedemande" /> */}
+                               <select name="idreferencedemande" className='form-control' id="">
+                                   {this.state.listproformat.map(element=>
+                                        <option value={element.idprenvoye}>{element.idprenvoye}</option>
+                                   )} 
+                                       
+                                     
+                               </select>
                             </td>
                         </tr>
                         <tr>

@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Century Gothic',sans-serif;
+}
+
+
+
+.title{
+    text-shadow: 1px;
+    font-size: 5em;
+    letter-spacing: 4px;
+    font-weight: 50;
+}
+
+
+.carte:hover{
+    width: 500px;
+}
+.carte{
+    margin-top: 150px;
+}
+a{
+    text-decoration: none;
+}
+
+/* .acc{
+    background-image: url('../images/main.jpg') ;
+    background-size: cover;
+    background-position: center center;
+    backface-visibility: hidden;
+    width: 100%;
+    height: 400px;
+} */
+
+.acc {
+    position: relative; 
+    height: 400px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.acc::before {    
+      content: "";
+      background-image: url('../images/main.jpg') ;
+      background-size: cover;
+      position: absolute;
+     
+      top: 0px;
+      right: 0px;
+      bottom: 0px;
+      left: 0px;
+      opacity: 0.65;
+}

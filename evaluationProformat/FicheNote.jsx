@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import FetchHelper from '../Helper/FetchHelper';
+import URLHelper from '../Helper/URLHelper';
+
 class FicheNote extends Component {
     state = { result:[{
-        idprofomatfournisseur:"test",
-        iddetailsproformat:1,
-        note:2
+        idproformat:"",
+        iddetailsproformat:0,
+        note:0
     }] } 
     onlyNumber=(event) => {
         if (!/[0-9]/.test(event.key)) {
@@ -16,57 +18,64 @@ class FicheNote extends Component {
         this.callchamp();
         
     }
-    constructor(props){
-        console.log("test");
-        super(props);
-        this.state=({result:[]})
-        let temp=[...this.state.result]
-        props.details.map( element=> (
-            console.log(element),
-            temp.push({
-                idprofomatfournisseur:props.ind,
-                iddetailsproformat:element.id,
-                note:0
-            }))
-        )
-        this.state={result:temp}
+   
+    initDetail(){
+        if (this.state.result[0].iddetailsproformat===0) {
+            let temp=[];   
+        this.props.details.map( element=> (
+        temp.push({
+            idproformat:this.props.ind,
+            iddetailsproformat:element.iddetail,
+            note:0
+        }))
+    )
+    this.state={result:temp}
+        }
+        
     }
-    callchamp= () =>{
-        FetchHelper.postData("test", this.state.result);
+    callchamp=async () =>{
+        let element=[];
+        const val=await (FetchHelper.getDataPost(URLHelper.urlgen("api/NoteProformat"),this.state.result));    
+         if(val.etat)window.location.href="/listereponse";
+        // console.log(this.state.result);
     }
     update=(id)=>{
-        console.log(id);
+        // console.log(id);
         let res=[];
         let temp=this.state.result;
-        for (let index = 0; index < temp.length; index++) {
-            const element = temp[index];
+        for (const element of temp) {
             if (element.iddetailsproformat===id) {
                 element.note=document.getElementById("el"+id).value;
             }
-            res.push(element);   
-        }
-        this.setState({result:res});
+            // console.log(element);
+            res.push(element);       
     }
+    this.setState({result:res});
+    // console.log(this.state.result);
+}
     render() { 
+       this.initDetail();
         return (
             <div style={{textAlign: "center"}} className='col-xl-4'>
                 <h2>Evaluation</h2>
                 <form action="" id="myForm" onSubmit={this.handleSubmit}>
-                    <table>
+                <div className="row g-3">
                         {this.props.details.map( element=>
-                            <tr>
-                                <td>{element.intitule}</td>
-                                <td>
-                                    <input type="number" name={element.intitule} min={0} max={element.coefficient} onKeyPress={this.onlyNumber} id={"el"+element.id} onChange={()=>this.update(element.id)}/>
-                                </td>
-                            </tr>
+                      
+                        <div className="col-md-12">
+                                <div className="row">
+                                    <label  className="form-label col-11">{element.intitule}</label>
+                                    
+                                </div>
+                                <input type="number" className='form-control' name={element.intitule} min={0} max={element.coefficient} onKeyPress={this.onlyNumber} id={"el"+element.iddetail} onChange={()=>this.update(element.iddetail)}/>
+                        </div>
+
                         )}
-                        <tr>
-                            <td colSpan={2}>
-                                <button>Continuer</button>
-                            </td>
-                        </tr>
-                    </table>
+                        </div>
+                       
+                                <button class="w-100 btn btn-success  submit">Continuer</button>
+                         
+                   
             </form>
             </div>
         );
@@ -74,3 +83,4 @@ class FicheNote extends Component {
 }
  
 export default FicheNote;
+

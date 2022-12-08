@@ -11,17 +11,27 @@ import AjoutRessource from './ajoutRessource/AjoutRessource';
 import DemandeRessource from './demandeRessource/DemandeRessource';
 import ProTyper from './profromaTyping/ProTyper';
 import ProSender from './proformatenvoyer/ProSender';
+import ListeDemande from './listeDemande/ListeDemande';
+import EvalProf from './evaluationProformat/EvaluationProformatFournisseur';
+import ListeReponse from './listeReponse/ListeReponse';
+import RightFournisseur from './rightfournisseur/RightFournisseur';
+import Main from './accueil/Main';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <Routes>
-    <Route path={'/'} element={<Login/>} ></Route>
+    <Route path={'/'} element={<Main/>} ></Route>
+    <Route path={'/login'} element={<Login/>} ></Route>
     <Route path={'/list'} element={<List/>} ></Route>
     <Route path={'/ajoutRessource'} element={<AjoutRessource/>} ></Route>
     <Route path={'/demandeRessource'} element={<DemandeRessource/>} ></Route>
     <Route path={'/proformatyper'} element={<ProTyper/>} ></Route>
     <Route path={'/prosend'} element={<ProSender/>} ></Route>
+    <Route path={'/evaluer'} element={<EvalProf/>} ></Route>
+    <Route path={'/listedemande'} element={<ListeDemande/>} ></Route>
+    <Route path={'/listereponse'} element={<ListeReponse/>} ></Route>
+    <Route path={'/boncommande'} element={<RightFournisseur/>} ></Route>
     </Routes>
   </BrowserRouter>
 );
