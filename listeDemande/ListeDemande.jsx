@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import LigneDemande from './LigneDemande';
-import FetchHelper from '../Helper/FetchHelper';
 class ListeDemande extends Component {
     state = { inf:[{
         id:5,
@@ -13,10 +12,6 @@ class ListeDemande extends Component {
         demande:"46 Chocolat",
     }
     ]}
-    constructor(){
-        super();
-      //  this.state = {inf:FetchHelper.getData("aiza")};
-    } 
     render() { 
         return (
             <div>

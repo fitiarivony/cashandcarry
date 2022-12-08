@@ -5,7 +5,6 @@ import URLHelper from '../Helper/URLHelper';
 import   '../assets/dist/css/bootstrap.min.css';
 import   classes from '../assets/css/DemandeRessource.module.css';
 import '../assets/js/form-validation.js';
-import image from'../assets/images/abstract3.jpg';
 /* TODO:
 * liste déroulante code ressource
 * nomDepartment atao props
