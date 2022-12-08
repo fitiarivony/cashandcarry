@@ -1,7 +1,7 @@
 
 class FetchHelper{
      static getData= async (url)=>{
-       
+       console.log(url);
        const response=await fetch(url,
         {
             crossDomain:true,

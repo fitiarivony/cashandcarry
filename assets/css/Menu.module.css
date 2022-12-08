@@ -19,6 +19,7 @@
 
 .carte:hover{
     width: 500px;
+    transition:.10s ease;
 }
 .carte{
     margin-top: 150px;

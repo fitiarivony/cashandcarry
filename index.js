@@ -17,6 +17,11 @@ import ListeReponse from './listeReponse/ListeReponse';
 import RightFournisseur from './rightfournisseur/RightFournisseur';
 import Main from './accueil/Main';
 
+import ListePro from './listeprorecu/ListePro';
+import ListeFournisseur from './listeFournisseurs/ListeFournisseur';
+import ListeRessource from './listeRessource/ListeRessource';
+import ListeBon from './bonfournisseur/ListeBon';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
@@ -29,8 +34,15 @@ root.render(
     <Route path={'/proformatyper'} element={<ProTyper/>} ></Route>
     <Route path={'/prosend'} element={<ProSender/>} ></Route>
     <Route path={'/evaluer'} element={<EvalProf/>} ></Route>
+    {/* Moins disant  */}
     <Route path={'/listedemande'} element={<ListeDemande/>} ></Route>
     <Route path={'/listereponse'} element={<ListeReponse/>} ></Route>
+    <Route path={'/listeressource'} element={<ListeRessource/>} ></Route>
+    <Route path={'/proformat_fournisseur'} element={<ListePro/>} ></Route>
+
+    {/* Bon de commande */}
+    <Route path={'/listefournisseur'} element={<ListeFournisseur/>} ></Route>
+    <Route path={'/bonfournisseur'} element={<ListeBon/>} ></Route>
     <Route path={'/boncommande'} element={<RightFournisseur/>} ></Route>
     </Routes>
   </BrowserRouter>

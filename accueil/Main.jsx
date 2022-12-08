@@ -37,10 +37,21 @@ export default class Main extends Component{
                             <div className={`card shadow mb-3 ${classes.carte}` }>
                                    
                                     <br/>
-                                    <a   className="stretched-link text-dark" href="/boncommande"><h4>Generer un bon de commande</h4></a>
+                                    <a   className="stretched-link text-dark" href="/listeressource"><h4>Moins Disant</h4></a>
+                                </div>
+                            </div>
+                            <div className={ `row `}>
+                        <div className="col">
+                            <div className={`card shadow mb-3 ${classes.carte}` }>
+                                   
+                                    <br/>
+                                    <a   className="stretched-link text-dark" href="/listefournisseur"><h4>Generer bon de commande</h4></a>
                                 </div>
                             </div>
                         </div>
+                          
+                        </div>
+                       
                     </div>
             </center>
             </div>
