@@ -318,7 +318,7 @@ create table mouvement_stock(
 
 create table boncommande(
     idboncommande varchar(10) default 'BDC'||nextval('boncommande_seq') primary key,
-    datecommande date default current_timestamp,
+    datecommande date default current_timestamp
 );
 
 create table lignecommande(
@@ -331,7 +331,7 @@ create table lignecommande(
 create view boncommande_detail as
 select 
 boncommande.*,
-lignecommande.quantite,lignecommande.idproformat_fournisseur
+lignecommande.quantite,lignecommande.idproformat_fournisseur,
 proformat_fournisseur.idfournisseur,
 proformat_fournisseur.qualite,
 proformat_fournisseur.pu,
@@ -340,7 +340,7 @@ from boncommande
 join lignecommande 
 on lignecommande.idboncommande=boncommande.idboncommande
 join proformat_fournisseur 
-on proformat_fournisseur.idproformat_fournisseur=boncommande.idproformat_fournisseur
+on proformat_fournisseur.idproformat_fournisseur=lignecommande.idproformat_fournisseur
 
 create table bonlivraison(
     idlivraison varchar(10) default 'BDL'||nextval('bonlivraison_seq') primary key,
@@ -352,13 +352,13 @@ create table bonlivraison(
 create table detaillivraison(
     idlivraison varchar(10),
     idstock varchar(10),
-    quantite float not null
-    FOREIGN KEY (idlivraison) REFERENCES livraison(idlivraison)
+    quantite float not null,
+    FOREIGN KEY (idlivraison) REFERENCES bonlivraison(idlivraison)
 );
 create table bonsortie(
     idbonsortie varchar(10) default 'BDS'||nextval('bonsortie_seq') primary key,
     idlivraison varchar(10),
-    FOREIGN KEY (idlivraison) REFERENCES livraison(idlivraison)
+    FOREIGN KEY (idlivraison) REFERENCES bonlivraison(idlivraison)
 );
 
 
@@ -367,32 +367,36 @@ create table bonreception(
     idbonreception varchar(10) default 'BDR'||nextval('bonreception_seq') primary key,
     datereception date default current_timestamp,
     idlivraison varchar(10),
-    FOREIGN KEY (idlivraison) REFERENCES livraison(idlivraison)
+    FOREIGN KEY (idlivraison) REFERENCES bonlivraison(idlivraison)
 );
+
 create table lignereception(
     idbonreception varchar(10),
     idressource varchar(10),
     quantite float not null,
-    FOREIGN KEY (idbonreception) REFERENCES reception(idbonreception)
+    FOREIGN KEY (idbonreception) REFERENCES bonreception(idbonreception)
 );
 
 create table facture(
     idfacture varchar(10) default 'FAC'||nextval('facture_seq') primary key,
     datefacture date default current_timestamp
 );
+
+
 create table detailfacture(
     idfacture varchar(10),
     idlivraison varchar(10),
     FOREIGN KEY (idfacture) REFERENCES facture(idfacture),
-    FOREIGN KEY (idlivraison) REFERENCES livraison(idlivraison)
+    FOREIGN KEY (idlivraison) REFERENCES bonlivraison(idlivraison)
 );
 
 create table reception_interne(
     idreception varchar(10) default 'REC'||nextval('reception_interne_seq' ) primary key,
     iddept varchar(10),
     datereception date default current_timestamp,
-    FOREIGN KEY (iddept) REFERENCES  departement(iddept),
+    FOREIGN KEY (iddept) REFERENCES  departement(iddept)
 );
+
 create table detail_interne(
     idressource varchar(10),
     quantite float not null,
