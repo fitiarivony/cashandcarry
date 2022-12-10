@@ -12,6 +12,12 @@ create sequence fournisseur_seq;
 create sequence prenvoye_seq;
 create sequence proformatfournisseur_seq;
 create sequence stock_seq;
+create sequence boncommande_seq;
+create sequence bonlivraison_seq;
+create sequence detaillivraison_seq;
+create sequence bonreception_seq;
+create sequence bonsortie_seq;
+create sequence facture_seq;
 
 create table departement(
     id serial,
@@ -263,12 +269,13 @@ on  classement_proformat.idprenvoye=envoye_fournisseur.idprenvoye
 ;
 
 -- Proformat info
-create view proformat_fournisseur_detail as
+create or replace view proformat_fournisseur_detail as
 select envoye_fournisseur.*,
 nomfournisseur,adresse,contact,codefournisseur
 from envoye_fournisseur
 join fournisseur on
 fournisseur.idfournisseur=envoye_fournisseur.idfournisseur
+order by pu
 ;
 
 create or replace view proformat_fournisseur_demande as
@@ -309,5 +316,89 @@ create table mouvement_stock(
     FOREIGN KEY (idressource) REFERENCES ressource(idressource)
 );
 
+create table boncommande(
+    idboncommande varchar(10) default 'BDC'||nextval('boncommande_seq') primary key,
+    datecommande date default current_timestamp,
+);
+
+create table lignecommande(
+    idboncommande varchar(10),
+    idproformat_fournisseur varchar(10),
+    quantite float not null,
+    FOREIGN KEY (idproformat_fournisseur) REFERENCES proformat_fournisseur(idproformat_fournisseur)
+);
+
+create view boncommande_detail as
+select 
+boncommande.*,
+lignecommande.quantite,lignecommande.idproformat_fournisseur
+proformat_fournisseur.idfournisseur,
+proformat_fournisseur.qualite,
+proformat_fournisseur.pu,
+proformat_fournisseur.lieulivraison,proformat_fournisseur.delailivraison
+from boncommande 
+join lignecommande 
+on lignecommande.idboncommande=boncommande.idboncommande
+join proformat_fournisseur 
+on proformat_fournisseur.idproformat_fournisseur=boncommande.idproformat_fournisseur
+
+create table bonlivraison(
+    idlivraison varchar(10) default 'BDL'||nextval('bonlivraison_seq') primary key,
+    daty date default current_timestamp,
+    idboncommande varchar(10),
+    FOREIGN KEY (idboncommande) REFERENCES boncommande(idboncommande)
+);
+
+create table detaillivraison(
+    idlivraison varchar(10),
+    idstock varchar(10),
+    quantite float not null
+    FOREIGN KEY (idlivraison) REFERENCES livraison(idlivraison)
+);
+create table bonsortie(
+    idbonsortie varchar(10) default 'BDS'||nextval('bonsortie_seq') primary key,
+    idlivraison varchar(10),
+    FOREIGN KEY (idlivraison) REFERENCES livraison(idlivraison)
+);
+
+
+
+create table bonreception(
+    idbonreception varchar(10) default 'BDR'||nextval('bonreception_seq') primary key,
+    datereception date default current_timestamp,
+    idlivraison varchar(10),
+    FOREIGN KEY (idlivraison) REFERENCES livraison(idlivraison)
+);
+create table lignereception(
+    idbonreception varchar(10),
+    idressource varchar(10),
+    quantite float not null,
+    FOREIGN KEY (idbonreception) REFERENCES reception(idbonreception)
+);
+
+create table facture(
+    idfacture varchar(10) default 'FAC'||nextval('facture_seq') primary key,
+    datefacture date default current_timestamp
+);
+create table detailfacture(
+    idfacture varchar(10),
+    idlivraison varchar(10),
+    FOREIGN KEY (idfacture) REFERENCES facture(idfacture),
+    FOREIGN KEY (idlivraison) REFERENCES livraison(idlivraison)
+);
+
+create table reception_interne(
+    idreception varchar(10) default 'REC'||nextval('reception_interne_seq' ) primary key,
+    iddept varchar(10),
+    datereception date default current_timestamp,
+    FOREIGN KEY (iddept) REFERENCES  departement(iddept),
+);
+create table detail_interne(
+    idressource varchar(10),
+    quantite float not null,
+    idreception varchar(10),
+    FOREIGN KEY (idreception) REFERENCES reception_interne(idreception),
+    FOREIGN KEY (idressource) REFERENCES ressource(idressource)
+);
 
 
