@@ -5,15 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Departement extends Model
+class Cmup_stock_fournisseur extends Model
 {
-    use HasFactory;
-
-    protected $table = 'departement';
+    protected $table = 'cmup_stock_fournisseur';
     public $timestamps = false;
     public $incrementing = false;
-    protected $fillable = [
-        'iddept',
-        'nomdepartement',
-    ];
 }

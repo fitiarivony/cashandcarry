@@ -12,10 +12,10 @@ class Societe extends Model
     protected $table = 'societe';
     public $timestamps = false;
     public $incrementing = false;
-    // protected $fillable = [
-    //     'idsociete',
-    //     'nomsociete',
-    //     'reference',
-    //     'adresse',
-    // ];
+    protected $fillable = [
+        'idsociete',
+        'nomsociete',
+        'reference',
+        'adresse',
+    ];
 }

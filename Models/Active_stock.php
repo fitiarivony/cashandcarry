@@ -5,15 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Departement extends Model
+class Active_stock extends Model
 {
-    use HasFactory;
-
-    protected $table = 'departement';
     public $timestamps = false;
     public $incrementing = false;
-    protected $fillable = [
-        'iddept',
-        'nomdepartement',
-    ];
+  protected $table='active_stock';
+
 }

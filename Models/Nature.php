@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ressource extends Model
+class Nature extends Model
 {
-   use HasFactory;
+    use HasFactory;
   public $timestamps = false;
-  protected $table='ressource';
+  protected $table='nature';
   public $incrementing = false;
-  protected $fillable = ['intitule','idachattype','code','idnature'];
-
+  protected $fillable = ['nomnature'];
 }

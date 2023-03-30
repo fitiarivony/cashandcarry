@@ -5,15 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Departement extends Model
+class V_mvstock extends Model
 {
     use HasFactory;
-
-    protected $table = 'departement';
     public $timestamps = false;
+    protected $table = 'v_mvstock';
     public $incrementing = false;
-    protected $fillable = [
-        'iddept',
-        'nomdepartement',
-    ];
 }
+

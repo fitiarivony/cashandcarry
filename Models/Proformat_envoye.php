@@ -9,6 +9,7 @@ class Proformat_envoye extends Model
 {
   //  use HasFactory;
   public $timestamps = false;
+  public $incrementing = false;
   protected $table='proformat_envoye';
-  protected $fillable = ['reference','idressource','intitule','quantite','idfournisseur'];
+  protected $fillable = ['reference','idressource','intitule','quantite','idfournisseur','idclient'];
 }
