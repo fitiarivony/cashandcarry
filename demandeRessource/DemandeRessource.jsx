@@ -101,6 +101,7 @@ class DemandeRessource extends Component {
     }
     callchamp= () =>{
         this.askRessources(URLHelper.urlgen("api/Demande_ressource"));
+        // console.log(this.state.data);
     }
    
     askRessources=(url)=>{
@@ -109,7 +110,7 @@ class DemandeRessource extends Component {
         .then(data=>{ 
             console.log(data);
             if (data.etat) {
-                // window.location.replace("/option")  
+                 window.location.replace("/demandeRessource?iddept="+new URLSearchParams(window.location.search).get('iddept'))  
             }else{
                 alert("erreur");
                 console.log("echec");

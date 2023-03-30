@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
 import FetchHelper from '../Helper/FetchHelper';
 import URLHelper from '../Helper/URLHelper';
-class FormElementLivraison extends Component {
+class RessourceComponent extends Component {
     state = {
 
         listebon:[],
+
     }
     add=()=>{
         let tab={
             rsc:document.getElementById("rsc").value,
             quantite:document.getElementById("qte").value,
+            pu:(document.getElementById("pu").value==="")?0:Number.parseInt(document.getElementById("pu").value)
         }
         console.log(tab);
         this.props.add(tab);
         document.getElementById("rsc").value="";
         document.getElementById("qte").value="0";
+        document.getElementById("pu").value="0";
     }
     async componentDidMount(){
         const liste = await FetchHelper.getData(
@@ -24,7 +27,6 @@ class FormElementLivraison extends Component {
           this.setState({listebon:liste});
     }
     handle=(event)=>{
-        console.log(event.target.value);
         document.getElementById("rsc").value=event.target.value;
     }
     render() { 
@@ -36,10 +38,10 @@ class FormElementLivraison extends Component {
                 <td>Ressource</td>
                 <td>
                     <input type="hidden" name="" id="rsc" />
-                    <select onClick={this.handle} name="" className="custom-select form-control mb-3" id="idc">
+                    <select onChange={this.handle} name="" className="custom-select form-control mb-3" id="idc">
                         {
                             this.state.listebon.map( (i)=>(
-                                <option value={i.idressource}>{i.code+" "+i.intitule}</option>
+                                <option value={i[this.props.show.value]}>{i[this.props.show.label[0]]+" "+i[this.props.show.label[1]]}</option>
                             ))
                         }
                     </select>
@@ -48,6 +50,10 @@ class FormElementLivraison extends Component {
             <tr>
                 <td>Quantite</td>
                 <td><input type="number" className="form-control mb-3" name="" id="qte" /></td>
+            </tr>
+            <tr>
+                <td>PU</td>
+                <td><input type="number" className="form-control mb-3" name="" id="pu" /></td>
             </tr>
             <tr>
                 <td></td>
@@ -61,4 +67,4 @@ class FormElementLivraison extends Component {
     }
 }
  
-export default FormElementLivraison;
+export default RessourceComponent;

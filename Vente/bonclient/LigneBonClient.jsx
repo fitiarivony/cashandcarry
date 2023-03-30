@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-class LigneBon extends Component {
+class LigneBonClient extends Component {
     state = {  }
     onlyNumber=(event) => {
         if (!/[0-9]/.test(event.key)) {
@@ -31,4 +31,4 @@ class LigneBon extends Component {
     }
 }
  
-export default LigneBon;
+export default LigneBonClient;

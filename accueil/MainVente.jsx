@@ -1,6 +1,6 @@
 import { Component } from "react";
-import classes from '../assets/css/Menu.module.css';
-export default class Main extends Component{
+import classes from '../assets/css/MenuVente.module.css';
+export default class MainVente extends Component{
     render(){
         return(
             <div className="container">
@@ -13,7 +13,7 @@ export default class Main extends Component{
                             <div className={` ${classes.carte}` }>
                                     
                                     <br/>
-                                    <a   className="text-dark" href="/prosend"><h4>Envoyer proformat</h4></a>
+                                    <a   className="text-dark" href="/proformatclient"><h4>Saisir un proformat envoyé par le client</h4></a>
                                 </div>
                             </div>
                 
@@ -21,31 +21,17 @@ export default class Main extends Component{
                                 <div className={` ${classes.carte}` }>
                                    
                                     <br/>
-                                    <a   className=" text-dark" href="/proformatyper"><h4>Saisir proformat reçu</h4></a>
+                                    <a   className=" text-dark" href="/proformatNodie"><h4>Envoyer un proformat comme reponse à un client</h4></a>
                                 </div>
                             </div>
                 
-                            <div className="col">
-                            <div className={` ${classes.carte}` }>
-                                   
-                                    <br/>
-                                    <a   className=" text-dark" href="/listereponse"><h4>Noter les proformats des fournisseurs</h4></a>
-                                </div>
-                            </div>
-                
-                            <div className="col">
-                            <div className={`${classes.carte}` }>
-                                   
-                                    <br/>
-                                    <a   className=" text-dark" href="/listeressource"><h4>Moins Disant</h4></a>
-                                </div>
-                            </div>
+                            
                             <div className={ `row `}>
                         <div className="col">
                             <div className={`${classes.carte}` }>
                                    
                                     <br/>
-                                    <a   className=" text-dark" href="/listefournisseur"><h4>Bon de commande</h4></a>
+                                    <a   className=" text-dark" href="/listebonclient"><h4>Bon de commande</h4></a>
                                 </div>
                             </div>
                         
@@ -53,7 +39,7 @@ export default class Main extends Component{
                             <div className={` ${classes.carte}` }>
                                    
                                     <br/>
-                                    <a   className=" text-dark" href="/livraison"><h4>Bon de livraison</h4></a>
+                                    <a   className=" text-dark" href="/livraisonvente"><h4>Bon de livraison</h4></a>
                                 </div>
                             </div>
                        
@@ -62,7 +48,7 @@ export default class Main extends Component{
                             <div className={` ${classes.carte}` }>
                                    
                                     <br/>
-                                    <a   className=" text-dark" href="/listereception"><h4>Bon de reception</h4></a>
+                                    <a   className=" text-dark" href="/listereceptionvente"><h4>Bon de reception</h4></a>
                                 </div>
                             </div>
 
@@ -70,7 +56,7 @@ export default class Main extends Component{
                             <div className={` ${classes.carte}` }>
                                    
                                     <br/>
-                                    <a   className=" text-dark" href="/facture"><h4>Facture</h4></a>
+                                    <a   className=" text-dark" href="/factureclient"><h4>Facture</h4></a>
                                 </div>
                             </div>
 

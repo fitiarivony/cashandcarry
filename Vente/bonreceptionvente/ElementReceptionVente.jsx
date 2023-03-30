@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-class ElementReception extends Component {
+class ElementReceptionVente extends Component {
     state = {  } 
     render() { 
         return (<tr>
@@ -10,4 +10,4 @@ class ElementReception extends Component {
     }
 }
  
-export default ElementReception;
+export default ElementReceptionVente;

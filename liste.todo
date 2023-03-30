@@ -8,5 +8,21 @@
     ✔ Insertion proformat @done(22-11-28 23:14)
     ✔ Demande_ressource fa tsy besoin ilay izy @done(22-11-28 23:14)
 -Bon de commande:
-    ☐ Lister les proformats fournisseurs par fournisseurs pour le bon de commande
-    ☐ Preparer la bon de commande pour qu'elle recoit plein de bon de commande
+    ✔ Lister les proformats fournisseurs par fournisseurs pour le bon de commande @done(23-01-07 21:56)
+    ✔ Preparer la bon de commande pour qu'elle recoit plein de bon de commande @done(23-01-07 21:56)
+-Facture:
+    ☐ Lister les bon de commande
+    ☐ Generer la facture
+
+-Migration:
+    ☐ On ne peut pas noter nos propres proformat  @Controle_valeur @15m
+    ☐ On ne peut pas inserer notre id dans saisir proformat_recu @Controle_valeur @15m
+    ☐ On ne peut pas generer  nos bons dans le cotes achat @Controle_valeur @15m
+
+
+    ✔ Generation bon commande @45m @done(23-01-08 20:48)
+    ✔ Generation bon de livraison @45m @started(23-01-08 22:49) @done(23-01-08 23:09) @lasted(20m56s)
+    ✔ Manamboatra accueil @30m @started(23-01-08 21:00) @done(23-01-08 21:20) @lasted(20m24s)
+
+    ✔ Manambotr proformat_client @45mn @started(23-01-08 22:10) @done(23-01-08 22:33) @lasted(23m45s)
+    ☐ Generer les bons @1h

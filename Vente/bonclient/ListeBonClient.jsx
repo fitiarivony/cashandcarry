@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import FetchHelper from '../Helper/FetchHelper';
-import LignePro from './LigneBon';
-import URLHelper from '../Helper/URLHelper';
-import LigneBon from './LigneBon';
-class ListeBon extends Component {
+import FetchHelper from '../../Helper/FetchHelper';
+import LignePro from './LigneBonClient';
+import URLHelper from '../../Helper/URLHelper';
+import LigneBonClient from './LigneBonClient';
+class ListeBonClient extends Component {
     state = { 
         inf:[{
-            idfournisseur:"",
-            nomfournisseur: "",
+            idclient:"",
+            nomclient: "",
             adresse:"",
             contact:"",
             codefournisseur:"",
@@ -22,20 +22,21 @@ class ListeBon extends Component {
             idressource:"",
             intitule:"",
             besoin:0,
-            idproformat_fournisseur:"",
+            idproformat_client:"",
         }],
         
      } 
     constructor(){
         super();
         let json={
-            idfournisseur:new URLSearchParams(window.location.search).get("idfournisseur")
+            idclient:new URLSearchParams(window.location.search).get("idclient"),
+            idfournisseur:'FOU6'
         }
-    //    this.state = {inf:FetchHelper.getData(URLHelper.urlgen("api/Proformat_fournisseur_demande_ressource"))};
+    //    this.state = {inf:FetchHelper.getData(URLHelper.urlgen("api/Proformat_client_demande_ressource"))};
     this.listProformatRecu(json);
     }
     listProformatRecu=async (json)=>{
-        const val=await (FetchHelper.getData(URLHelper.urlgen("api/procommande?data="+JSON.stringify(json))));
+        const val=await (FetchHelper.getData(URLHelper.urlgen("api/procommandeclient?data="+JSON.stringify(json))));
         (this.setState({ inf: val }));
     }
     handleSubmit=(event) => {
@@ -74,11 +75,13 @@ class ListeBon extends Component {
      
         
         let format=this.formatJSON(this.getChecked(object));
+        console.log(format);
         this.getpdf(format);
         // this.askRessources(URLHelper.urlgen("logAdmin/login.php?data="+json));
     }
      getChecked=(object) =>{
         let tableau=[];
+        console.log(object);
         let keys=Object.keys(object);
         keys.forEach(key =>{
           let array=object[key];
@@ -91,6 +94,7 @@ class ListeBon extends Component {
                     if(!isNaN(i)){
                         if(i===""){
                            let valeur=this.state.inf.filter((pro)=> pro.idproformat_fournisseur===key);
+                          
                            document.getElementsByName("quantite-"+key).value=valeur[0].quantite;
                             object[key][j]=valeur[0].quantite;
                             
@@ -142,11 +146,11 @@ class ListeBon extends Component {
                 const fileURL = window.URL.createObjectURL(blob);
                 let alink = document.createElement('a');
                 alink.href = fileURL;
-                alink.download = 'BDC-'+this.getdate()+this.state.inf[0].idfournisseur+'.pdf';
+                alink.download = 'BDC-'+this.getdate()+this.state.inf[0].idclient+'.pdf';
                 alink.click();
                 vita=true;
                if(vita){
-                window.location.href="/achat";
+                window.location.href="/vente";
                }
             })
         })
@@ -158,24 +162,24 @@ class ListeBon extends Component {
               <form action="" id="myForm" onSubmit={this.handleSubmit} >
             <div className="container card shadow mb-3">
                 <div className="title-card card-header bg-info">
-                        <p className="text m-0 ">Liste  des Fournisseurs ayant des proformats validable du fournisseur "{this.state.inf[0].nomfournisseur}"</p>
+                        <p className="text m-0 ">Liste des clients ayant des proformats validable du client "{this.state.inf[0].nomclient}"</p>
                     </div>
                     <div className=" container card-body">
                     <table className='table table-bordered'>
                         <thead className='thead-dark'>
-                            <th scope="col">Code fournisseur</th>
+                            <th scope="col">Code client</th>
                             <th scope="col">Code ressource</th>
                             <th scope="col">Prix unitaire</th>
-                            <th scope="col">Quantite propose</th>
-                            <th scope="col">Quantite que vous allez prendre</th>
+                            <th scope="col">Quantite disponible</th>
+                            <th scope="col">Quantite qu'ils vont prendre</th>
                             <th scope="col">Qualite</th>
                             <th scope="col">Lieu livraison</th>
                             <th scope="col">Date livraison</th>
-                            <th scope="col">Quantite attendu</th>
+                            <th scope="col">Besoin</th>
                             <th scope="col"></th>
                         </thead>
                 {this.state.inf.map(el=>
-                    <LigneBon inf={el}></LigneBon>    
+                    <LigneBonClient inf={el}></LigneBonClient>    
                 )}
                 </table>
                  
@@ -189,4 +193,4 @@ class ListeBon extends Component {
     }
 }
  
-export default ListeBon;
+export default ListeBonClient;

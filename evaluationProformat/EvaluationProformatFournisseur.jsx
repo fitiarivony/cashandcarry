@@ -3,6 +3,7 @@ import Info from './Info';
 import FicheNote from './FicheNote';
 import '../assets/css/bootstrap.min.css';
 import URLHelper from '../Helper/URLHelper';
+import image from '../assets/images/noteproformat.jpg';
 
 class EvalProf extends Component {
     state = { 

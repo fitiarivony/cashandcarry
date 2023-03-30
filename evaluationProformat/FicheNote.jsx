@@ -34,6 +34,7 @@ class FicheNote extends Component {
         
     }
     callchamp=async () =>{
+        let element=[];
         const val=await (FetchHelper.getDataPost(URLHelper.urlgen("api/NoteProformat"),this.state.result));    
          if(val.etat)window.location.href="/listereponse";
         // console.log(this.state.result);

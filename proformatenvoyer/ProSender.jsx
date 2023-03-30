@@ -99,7 +99,7 @@ class ProSender extends Component {
            
             if (data.etat) {
                 // console.log(data);
-                  window.location.replace("/")  
+                  window.location.replace("/achat")  
             }else{
                 alert("erreur");
                 console.log("echec");

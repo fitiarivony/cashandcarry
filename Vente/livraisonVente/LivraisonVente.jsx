@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import TabElementLivraison from "./TabElementLivraison";
 import FormElementLivraison from "./FormElementLivraison";
 import Modal from "react-modal";
-import FetchHelper from "../Helper/FetchHelper";
-import URLHelper from "../Helper/URLHelper";
+import FetchHelper from "../../Helper/FetchHelper";
+import URLHelper from "../../Helper/URLHelper";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
-class Livraison extends Component {
+class LivraisonVente extends Component {
   state = {
     fournisseur: "",
     date: "",
@@ -26,7 +26,7 @@ class Livraison extends Component {
   };
   async componentDidMount() {
     let json={
-        idclient:'FOU6'
+        idfournisseur:'FOU6'
     }
     const liste = await FetchHelper.getData(
       URLHelper.urlgen("api/BonCommandeSociete/login?data="+JSON.stringify(json))
@@ -69,6 +69,8 @@ class Livraison extends Component {
           data:this.state.elementLivraison
         };
         
+        console.log(alefa);
+      
         this.testpdf(alefa);
    
   };
@@ -82,6 +84,7 @@ class Livraison extends Component {
    return val;
 }
   testpdf =(livraison)=> {
+    console.log(livraison);
     let vita=false;
     fetch(URLHelper.urlgen("api/storeLivraison"),{crossDomain:true,method:'POST',body:JSON.stringify(livraison), headers: {'Content-Type': 'application/pdf'}})
     .then(response=>{
@@ -93,7 +96,7 @@ class Livraison extends Component {
             alink.click();
             vita=true;
             if(vita){
-             window.location.href="/achat";
+             window.location.href="/vente";
             }
         })
     })
@@ -183,4 +186,4 @@ class Livraison extends Component {
   }
 }
 
-export default Livraison;
+export default LivraisonVente;

@@ -23,7 +23,7 @@ class BonCommande extends Component {
     } 
     constructor(){
         super();
-        this.listProformatRecu();
+        // this.listProformatRecu();
     }
     listProformatRecu=async ()=>{
         const val=await (FetchHelper.getData(URLHelper.urlgen("api/Proformat_fournisseur_demande_ressource")));
